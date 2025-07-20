@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] {
+    display: none;
+}
+
+
+/* hero section  */
+
+.font-display {
+    font-family: "Rubik", sans-serif;
+}
+
+.drop-shadow-2xl {
+    filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));
+}
+
+@keyframes progress {
+    from {
+        transform: scaleX(0);
+    }
+
+    to {
+        transform: scaleX(1);
+    }
+}
+
+.animate-progress {
+    animation: progress 8s linear forwards;
+}
+
+/* EventEditForm */
+.input {
+    @apply w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.btn-primary {
+    @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors;
+}
+
+.btn-secondary {
+    @apply bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors;
+}
+
+/* Custom scrollbar ministry description  */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #059669;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #047857;
+}
+
+/* home events style card swipe  */
+.scroll-smooth {
+    scroll-behavior: smooth;
+}
+
+@keyframes gradient-x {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+.animate-gradient-x {
+    background-size: 200% 100%;
+    animation: gradient-x 4s linear infinite;
+}
+
+
+/* Custom styles for Swiper */
+.swiper-pagination-bullet-active {
+    background-color: #008000 !important;
+}
+
+/* Override Swiper default styles */
+.swiper-button-next:after,
+.swiper-button-prev:after {
+    font-size: 1.25rem !important;
+}
+
+/* Fix for button positioning */
+.swiper-button-prev {
+    left: 10px !important;
+}
+
+.swiper-button-next {
+    right: 10px !important;
+}
