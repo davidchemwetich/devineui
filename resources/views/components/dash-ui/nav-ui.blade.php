@@ -116,6 +116,12 @@
                 class="block px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                 Team & Staff Categories
             </a>
+            <a href="{{ route(config('app.admin_prefix', 'shield') . '.project.types.index') }}"
+                x-bind:class="activeMenu === 'analytics.performance' ? 'text-pink-600 dark:text-pink-400 font-medium' : 'text-gray-500 dark:text-gray-400'"
+                @click="activeMenu = 'analytics.performance'; sidebarOpen = false"
+                class="block px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+               Project Types
+            </a>
         </div>
     </div>
 
@@ -211,7 +217,7 @@
                 class="block px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                 Article Management
             </a>
-            <a href="{{ route(config('app.admin_prefix') . '.categories.index') }}"
+            <a href="{{ route(config('app.admin_prefix', 'shield') . '.categories.index') }}"
                 x-bind:class="activeMenu === 'analytics.traffic' ? 'text-pink-600 dark:text-pink-400 font-medium' : 'text-gray-500 dark:text-gray-400'"
                 @click="activeMenu = 'analytics.traffic'; sidebarOpen = false"
                 class="block px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">

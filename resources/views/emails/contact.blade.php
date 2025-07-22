@@ -284,21 +284,6 @@
             </div>
         </div>
 
-        <!-- Church Photo/Banner -->
-        <div class="mt-12 overflow-hidden bg-green-700 rounded-lg shadow-lg">
-            <div class="relative w-full h-64 overflow-hidden md:h-80 bg-bg-[#008000]">
-                <div
-                    class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center bg-[#008000] bg-opacity-40">
-                    <h2 class="mb-2 text-2xl font-bold text-black md:text-3xl">Join Us This Sunday</h2>
-                    <p class="mb-6 text-lg text-black md:text-xl">Everyone is welcome in God's house</p>
-                    <a href="#"
-                        class="inline-flex items-center px-5 py-2.5  bg-[#000fff] text-white rounded-md font-medium text-sm hover:bg-green-50 transition duration-150">
-                        Plan Your Visit
-                    </a>
-                </div>
-            </div>
-        </div>
-
         <br>
     </div>
 </div>

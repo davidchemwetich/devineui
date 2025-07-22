@@ -8,8 +8,7 @@ use App\Livewire\Frontend\Chapel\ChurchList;
 use App\Livewire\Frontend\Settings\InfoHub;
 use App\Livewire\Shield\Article\ArticleForm;
 use App\Livewire\Shield\Article\ArticleManagement;
-use App\Livewire\Shield\Category\CategoryForm;
-use App\Livewire\Shield\Category\CategoryManagement;
+use App\Livewire\Shield\Category\CategoryCrud;
 use App\Livewire\Shield\Church\ManageChurches;
 use App\Livewire\Shield\Church\SermonForm;
 use App\Livewire\Shield\Church\SermonManager;
@@ -28,7 +27,6 @@ use App\Livewire\Shield\Settings\GeneralSettings;
 use App\Livewire\Shield\Region\Index as RegionIndex;
 use App\Livewire\Shield\Cluster\Index as ClusterIndex;
 
-use App\Http\Controllers\ContactController;
 use App\Livewire\Frontend\Article\ArticleIndex;
 use App\Livewire\Frontend\Article\ArticleShow;
 use App\Livewire\Frontend\Church\ChurchLeadership;
@@ -48,12 +46,9 @@ use Illuminate\Support\Facades\Route;
 // Home Route
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Contact Us Route
-Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-
-// About Us page using Livewire component
+Route::get('/contact', \App\Livewire\Frontend\Settings\ContactPage::class)->name('contact');
+// About Us page 
 Route::get('/about', Aboutsite::class)->name('about');
-
 
 Route::get('/ministries', MinistryShowcase::class)->name('ministries.index');
 Route::get('/ministries/{id}', MinistryShowcase::class)->name('ministries.show');
@@ -62,13 +57,9 @@ Route::get('/galleries', MinistryGallery::class)->name('ministry.galleries');
 
 Route::get('/ministry-events', EventsDisplay::class)->name('frontend.ministry.events');
 
-
-// Church Directory Frontend Routes
 Route::get('/churches', ChurchList::class)->name('churches');
 Route::get('/churches/{id}', ChurchDetail::class)->name('church.detail');
 
-
-// Church Directory Frontend Routes
 // All sermons page
 Route::get('/sermons', SermonsList::class)->name('sermons');
 //Donate Route
@@ -136,12 +127,7 @@ Route::middleware([
         });
         //Article Category Management Routes
         Route::prefix('categories')->name('categories.')->group(function () {
-            // Route for displaying the list of categories
-            Route::get('/', CategoryManagement::class)->name('index');
-            // Route for creating a new category
-            Route::get('/create', CategoryForm::class)->name('create');
-            // Route for editing an existing category
-            Route::get('/edit/{categoryId}', CategoryForm::class)->name('edit');
+            Route::get('/', CategoryCrud::class)->name('index');
         });
 
         // Article Management Routes
@@ -204,6 +190,14 @@ Route::middleware([
         Route::prefix('ministry-events')->name('ministry.events.')->group(function () {
             Route::get('/', MinistryEventList::class)->name('index');
             Route::get('/create', MinistryEventForm::class)->name('create');
+        });
+
+        // Project Management Routes
+        Route::prefix('project')->name('project.')->group(function () {
+            // Project Types
+            Route::get('types', \App\Livewire\Shield\Project\ProjectType::class)
+                ->name('types.index');
+            // (the upcoming Project stepper form will go here next)
         });
     });
 
