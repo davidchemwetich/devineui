@@ -55,17 +55,6 @@
                     </div>
                 </div>
 
-                <!-- Time Filter -->
-                <div>
-                    <label class="block text-sm font-medium text-[#008000] dark:text-[#008000] mb-1">Time
-                        Frame</label>
-                    <div class="relative">
-                        <select
-                            class="w-full py-2 pl-4 pr-8 border appearance-none rounded-xl border-[#008000] dark:border-gray-600 bg-white/50 dark:bg-gray-700/50 focus:ring-2 focus:ring-[#008000] focus:border-emerald-400 dark:focus:ring-[#008000] text-emerald-800 dark:text-emerald-100">
-                            <!-- Options -->
-                        </select>
-                    </div>
-                </div>
             </div>
         </div>
 

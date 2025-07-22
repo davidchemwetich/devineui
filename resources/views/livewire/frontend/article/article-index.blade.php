@@ -17,27 +17,8 @@
             <p class="mt-3 text-lg font-semibold text-[#008000]">Loading inspiration...</p>
         </div>
     </div>
-    <!-- Hero Section -->
-    <div class="relative py-20 bg-[#008000]">
-        <div class="absolute inset-0 opacity-20 bg-pattern-overlay"></div>
-        <div class="container relative z-10 px-4 mx-auto">
-            <div class="max-w-3xl mx-auto text-center" x-data="{ loaded: false }"
-                x-init="setTimeout(() => loaded = true, 100)" x-transition:enter.duration.500ms>
-                <h1 class="text-4xl font-bold leading-tight text-white transition-all duration-500 transform md:text-5xl"
-                    :class="loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'">
-                    Welcome to Our Church Blog
-                </h1>
-                <p class="mt-4 text-xl font-light text-[#ffffff] opacity-90">
-                    Discover stories, teachings, and
-                    spiritual insights
-                </p>
-            </div>
-        </div>
-    </div>
-
-
     <!-- Filters and view toggle -->
-    <div class="flex flex-col gap-4 mb-8 md:flex-row md:items-center md:justify-between">
+    {{-- <div class="flex flex-col gap-4 mb-8 md:flex-row md:items-center md:justify-between">
         <button @click="mobileFiltersOpen = !mobileFiltersOpen"
             class="flex items-center px-5 py-3 space-x-2 text-white transition bg-blue-600 shadow-lg md:hidden rounded-xl hover:bg-blue-700">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -61,10 +42,10 @@
                 </svg>
             </button>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Mobile filter dropdown -->
-    <div x-show="mobileFiltersOpen" x-transition:enter="transition ease-out duration-300"
+    {{-- <div x-show="mobileFiltersOpen" x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
         class="mb-6 md:hidden">
         <div class="p-5 bg-white shadow-xl rounded-2xl">
@@ -95,10 +76,10 @@
                 class="w-full px-5 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">Clear
                 Filters</button>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Desktop filters -->
-    <div class="items-center hidden gap-4 mb-8 md:flex">
+    {{-- <div class="items-center hidden gap-4 mb-8 md:flex">
         <div class="relative flex-1 max-w-md">
             <input type="text" wire:model.debounce.500ms="search"
                 class="w-full py-3 pl-10 pr-4 border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -119,7 +100,7 @@
         <button wire:click="clearFilters"
             class="px-5 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">Clear
             Filters</button>
-    </div>
+    </div> --}}
 
     <!-- Main content -->
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-4">

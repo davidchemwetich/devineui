@@ -1,6 +1,29 @@
-<div class="p-6 bg-white rounded-lg shadow-lg" x-data="{
-    characterCount: 0,
-    maxExcerpt: 300,
+<div class="p-4 bg-white rounded-lg shadow-lg sm:p-6 dark:bg-gray-800" x-data="{
+    step: @entangle('step'),
+    totalSteps: 4,
+    autoSlug: true,
+    showImagePreview: false,
+    imagePreview: '',
+    excerptEditorInitialized: false,
+    bodyEditorInitialized: false,
+
+    init() {
+        const initEditorsOnStep2 = () => {
+            if (this.step === 2) {
+                // Use a short timeout to ensure Alpine has made the elements visible
+                // before EasyMDE tries to initialize on them.
+                setTimeout(() => {
+                    this.initExcerptEditor();
+                    this.initBodyEditor();
+                }, 50);
+            }
+        };
+
+        this.$watch('step', () => initEditorsOnStep2());
+
+        // Initial call in case the component loads on step 2
+        initEditorsOnStep2();
+    },
     slugify(text) {
         return text.toString().toLowerCase()
             .replace(/\s+/g, '-')
@@ -9,219 +32,263 @@
             .replace(/^-+/, '')
             .replace(/-+$/, '');
     },
-    autoSlug: true,
-    showImagePreview: false,
-    imagePreview: '',
     previewImage(event) {
         const file = event.target.files[0];
         if (file) {
             this.showImagePreview = true;
             this.imagePreview = URL.createObjectURL(file);
         }
+    },
+    initExcerptEditor() {
+        if (this.excerptEditorInitialized) return;
+
+        const excerptEditorEl = document.getElementById('excerpt-editor');
+        if (excerptEditorEl) {
+            const easyMDE = new EasyMDE({
+                element: excerptEditorEl,
+                spellChecker: false,
+                minHeight: '150px',
+                maxHeight: '200px',
+                toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', '|', 'preview'],
+                status: false,
+                placeholder: 'Write a short excerpt...',
+                initialValue: excerptEditorEl.value
+            });
+            easyMDE.codemirror.on('change', () => {
+                $wire.set('excerpt', easyMDE.value());
+            });
+            this.excerptEditorInitialized = true;
+        }
+    },
+    initBodyEditor() {
+        if (this.bodyEditorInitialized) return;
+
+        const bodyEditorEl = document.getElementById('body-editor');
+        if (bodyEditorEl) {
+            const easyMDE = new EasyMDE({
+                element: bodyEditorEl,
+                spellChecker: false,
+                minHeight: '300px',
+                toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', '|', 'preview', 'side-by-side', 'fullscreen', '|', 'guide'],
+                status: ['autosave', 'lines', 'words', 'cursor'],
+                placeholder: 'Start writing your article content...',
+                initialValue: bodyEditorEl.value
+            });
+            easyMDE.codemirror.on('change', () => {
+                $wire.set('body', easyMDE.value());
+            });
+            this.bodyEditorInitialized = true;
+        }
     }
 }">
-    <h1 class="pb-3 mb-6 text-3xl font-bold text-blue-700 border-b">
-        {{ $articleId ? 'Edit Article' : 'Create New Article' }}
-    </h1>
+    <!-- Stepper Navigation -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <template x-for="i in totalSteps" :key="i">
+                <div class="flex items-center w-full">
+                    <div class="flex items-center"
+                        :class="{'text-blue-600 dark:text-blue-400': step >= i, 'text-gray-500 dark:text-gray-400': step < i}">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full"
+                            :class="{'bg-blue-600 text-white': step === i, 'bg-gray-200 dark:bg-gray-700': step !== i}">
+                            <span x-text="i"></span>
+                        </div>
+                        <span class="ml-2 text-sm font-medium" x-show="step === i">
+                            <span x-text="['Content', 'Details', 'Media', 'Publish'][i-1]"></span>
+                        </span>
+                    </div>
+                    <div x-show="i < totalSteps" class="flex-auto transition duration-500 ease-in-out border-t-2"
+                        :class="{'border-blue-600 dark:border-blue-400': step > i, 'border-gray-200 dark:border-gray-600': step <= i}">
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
 
-    <form wire:submit="save" class="space-y-6">
-        <!-- Success message -->
+
+    <form @submit.prevent="step === totalSteps ? $wire.save() : $wire.nextStep()" class="space-y-6">
+        <!-- Success Message -->
         @if (session()->has('message'))
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-            class="flex items-center justify-between p-4 mb-4 text-green-700 bg-green-100 border-l-4 border-green-500 rounded shadow-md">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clip-rule="evenodd"></path>
-                </svg>
-                <span>{{ session('message') }}</span>
-            </div>
-            <button type="button" @click="show = false" class="text-green-700">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                        clip-rule="evenodd"></path>
-                </svg>
-            </button>
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
+            class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+            role="alert">
+            <span class="font-medium">Success!</span> {{ session('message') }}
         </div>
         @endif
 
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <!-- Title Field -->
+        <!-- Step 1: Content -->
+        <div x-show="step === 1" class="space-y-6">
             <div>
-                <label for="title" class="block mb-1 text-sm font-medium text-gray-700">Title</label>
-                <input type="text" wire:model="title" id="title"
-                    x-on:input="if(autoSlug) $wire.slug = slugify($event.target.value)"
-                    class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
+                <input type="text" wire:model.lazy="title" id="title"
+                    x-on:input="if(autoSlug) $wire.set('slug', slugify($event.target.value))"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                     required>
-                @error('title') <span class="mt-1 text-xs text-red-500">{{ $message }}</span> @enderror
+                @error('title') <span class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</span>
+                @enderror
             </div>
-
-            <!-- Slug Field -->
             <div>
-                <label for="slug" class="block mb-1 text-sm font-medium text-gray-700">Slug</label>
-                <div class="flex mt-1 rounded-md shadow-sm">
-                    <input type="text" wire:model="slug" id="slug" x-on:input="autoSlug = false"
-                        class="flex-grow block w-full border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-l-md"
+                <label for="slug" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Slug</label>
+                <div class="flex">
+                    <input type="text" wire:model.lazy="slug" id="slug" x-on:input="autoSlug = false"
+                        class="rounded-none rounded-l-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                         required>
-                    <button type="button" @click="$wire.slug = slugify($wire.title); autoSlug = true"
-                        class="inline-flex items-center px-3 py-2 text-sm text-gray-500 border border-l-0 border-gray-300 bg-gray-50 rounded-r-md hover:bg-gray-100">
+                    <button type="button" @click="$wire.set('slug', slugify($wire.title)); autoSlug = true"
+                        class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-l-0 border-gray-300 rounded-r-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
                         Auto
                     </button>
                 </div>
-                @error('slug') <span class="mt-1 text-xs text-red-500">{{ $message }}</span> @enderror
+                @error('slug') <span class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
             </div>
         </div>
 
-        <!-- Featured Image Upload -->
-        <div>
-            <label for="featured_image" class="block mb-1 text-sm font-medium text-gray-700">Featured Image</label>
-            <div class="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
-                <div class="flex-grow">
-                    <div class="flex items-center justify-center w-full">
-                        <label for="featured_image_upload" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg class="w-8 h-8 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                </svg>
-                                <p class="mb-1 text-sm text-gray-500">
-                                    <span class="font-semibold">Click to upload</span> or drag and drop
-                                </p>
-                                <p class="text-xs text-gray-500">PNG, JPG, GIF up to 2MB</p>
-                            </div>
-                            <input wire:model="featured_image" @change="previewImage($event)" id="featured_image_upload" type="file" class="hidden" accept="image/*" />
-                        </label>
-                    </div>
-                    @error('featured_image') <span class="mt-1 text-xs text-red-500">{{ $message }}</span> @enderror
-                </div>
-                
-                <!-- Image Preview -->
-                <div x-show="showImagePreview" class="w-full md:w-1/3">
-                    <div class="relative h-32 overflow-hidden bg-gray-100 border rounded-lg">
-                        <img x-bind:src="imagePreview" class="object-cover w-full h-full" alt="Image preview">
-                        <button type="button" @click="showImagePreview = false; $wire.clearFeaturedImage()" 
-                            class="absolute p-1 text-white bg-red-500 rounded-full top-2 right-2 hover:bg-red-600">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Current Image Preview (if editing) -->
-                <div wire:ignore x-show="!showImagePreview" class="w-full md:w-1/3" x-data="{ hasCurrentImage: '{{ isset($featuredImageUrl) && $featuredImageUrl }}' }">
-                    <div x-show="hasCurrentImage" class="relative h-32 overflow-hidden bg-gray-100 border rounded-lg">
-                        <img src="{{ isset($featuredImageUrl) ? $featuredImageUrl : '' }}" class="object-cover w-full h-full" alt="Current featured image">
-                        <button type="button" wire:click="removeFeaturedImage" @click="hasCurrentImage = false"
-                            class="absolute p-1 text-white bg-red-500 rounded-full top-2 right-2 hover:bg-red-600">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Scripture Reference Field -->
-        <div>
-            <label for="scripture_reference" class="block mb-1 text-sm font-medium text-gray-700">Scripture Reference</label>
-            <input type="text" wire:model="scripture_reference" id="scripture_reference" placeholder="e.g. John 3:16-17"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-            @error('scripture_reference') <span class="mt-1 text-xs text-red-500">{{ $message }}</span> @enderror
-        </div>
-
-        <!-- Excerpt Field -->
-        <div>
-            <label for="excerpt" class="block mb-1 text-sm font-medium text-gray-700">
-                Excerpt <span class="text-xs text-gray-500"
-                    x-text="`${$wire.excerpt ? $wire.excerpt.length : 0}/${maxExcerpt}`"></span>
-            </label>
-            <textarea wire:model="excerpt" id="excerpt"
-                x-init="characterCount = $wire.excerpt ? $wire.excerpt.length : 0"
-                x-on:input="characterCount = $event.target.value.length" rows="3" maxlength="300"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                required></textarea>
-            <div class="flex justify-end">
-                <div class="text-xs text-gray-500" x-text="`${characterCount}/${maxExcerpt} characters`"></div>
-            </div>
-            @error('excerpt') <span class="mt-1 text-xs text-red-500">{{ $message }}</span> @enderror
-        </div>
-
-        <!-- Body Field -->
-        <div>
-            <label for="body" class="block mb-1 text-sm font-medium text-gray-700">Body</label>
-            <textarea wire:model="body" id="body" rows="10"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                required></textarea>
-            @error('body') <span class="mt-1 text-xs text-red-500">{{ $message }}</span> @enderror
-        </div>
-
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <!-- Category Field -->
+        <!-- Step 2: Details -->
+        <div x-show="step === 2" class="space-y-6" wire:ignore>
             <div>
-                <label for="category_id" class="block mb-1 text-sm font-medium text-gray-700">Category</label>
+                <label for="excerpt-editor"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Excerpt</label>
+                <textarea id="excerpt-editor">{!! $excerpt !!}</textarea>
+                @error('excerpt') <span class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</span>
+                @enderror
+            </div>
+            <div>
+                <label for="body-editor"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Body</label>
+                <textarea id="body-editor">{!! $body !!}</textarea>
+                @error('body') <span class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
+            </div>
+        </div>
+
+        <!-- Step 3: Media -->
+        <div x-show="step === 3" class="space-y-6">
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    for="featured_image_upload">Featured Image</label>
+                <div class="flex items-center justify-center w-full">
+                    <label for="featured_image_upload"
+                        class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                            </svg>
+                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click
+                                    to upload</span> or drag and drop</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF (MAX. 2MB)</p>
+                        </div>
+                        <input wire:model="featured_image" @change="previewImage($event)" id="featured_image_upload"
+                            type="file" class="hidden" accept="image/*" />
+                    </label>
+                </div>
+                @error('featured_image') <span class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</span>
+                @enderror
+            </div>
+            <!-- Image Previews -->
+            <div class="flex space-x-4">
+                <div x-show="showImagePreview" class="w-1/2">
+                    <p class="mb-2 text-sm font-medium text-gray-900 dark:text-white">New Image Preview:</p>
+                    <div class="relative h-48 bg-gray-100 border rounded-lg dark:bg-gray-700">
+                        <img x-bind:src="imagePreview" class="object-cover w-full h-full rounded-lg"
+                            alt="Image preview">
+                        <button type="button" @click="showImagePreview = false; $wire.clearFeaturedImage()"
+                            class="absolute top-2 right-2 p-1.5 bg-red-600 rounded-full text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div x-show="!showImagePreview && '{{ $featuredImageUrl }}'" class="w-1/2">
+                    <p class="mb-2 text-sm font-medium text-gray-900 dark:text-white">Current Image:</p>
+                    <div class="relative h-48 bg-gray-100 border rounded-lg dark:bg-gray-700">
+                        <img src="{{ $featuredImageUrl }}" class="object-cover w-full h-full rounded-lg"
+                            alt="Current featured image">
+                        <button type="button" wire:click="removeFeaturedImage"
+                            class="absolute top-2 right-2 p-1.5 bg-red-600 rounded-full text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="scripture_reference"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Scripture Reference</label>
+                <input type="text" wire:model.lazy="scripture_reference" id="scripture_reference"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                @error('scripture_reference') <span class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message
+                    }}</span> @enderror
+            </div>
+        </div>
+
+        <!-- Step 4: Publish -->
+        <div x-show="step === 4" class="space-y-6">
+            <div>
+                <label for="category_id"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
                 <select wire:model="category_id" id="category_id"
-                    class="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                     <option value="">Select Category</option>
                     @foreach($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
                 </select>
-                @error('category_id') <span class="mt-1 text-xs text-red-500">{{ $message }}</span> @enderror
+                @error('category_id') <span class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</span>
+                @enderror
             </div>
-
-            <!-- Publication Date and Status -->
-            <div class="space-y-4">
-                <!-- Publication Date Field -->
-                <div x-data="{ showDatepicker: false }" class="relative">
-                    <label for="published_at" class="block mb-1 text-sm font-medium text-gray-700">Publication Date</label>
-                    <div class="relative">
-                        <input type="text" wire:model="published_at" id="published_at" placeholder="Select date"
-                            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            readonly x-on:click="showDatepicker = !showDatepicker">
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    @error('published_at') <span class="mt-1 text-xs text-red-500">{{ $message }}</span> @enderror
+            <div>
+                <label for="published_at"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Publication Date</label>
+                <input type="datetime-local" wire:model="published_at" id="published_at"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                @error('published_at') <span class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="flex items-start space-x-4">
+                <div class="flex items-center h-5">
+                    <input id="is_featured" wire:model="is_featured" type="checkbox"
+                        class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800">
                 </div>
-
-                <!-- Status Options -->
-                <div class="flex flex-col space-y-4 pt-2">
-                    <div class="flex items-center">
-                        <input type="checkbox" wire:model="is_featured" id="is_featured"
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <label for="is_featured" class="block ml-2 text-sm text-gray-700">Featured Article</label>
-                    </div>
-
-                    <div class="flex items-center">
-                        <input type="checkbox" wire:model="is_published" id="is_published"
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <label for="is_published" class="block ml-2 text-sm text-gray-700">Published</label>
-                    </div>
+                <label for="is_featured" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Featured
+                    Article</label>
+            </div>
+            <div class="flex items-start space-x-4">
+                <div class="flex items-center h-5">
+                    <input id="is_published" wire:model="is_published" type="checkbox"
+                        class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800">
                 </div>
+                <label for="is_published"
+                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Published</label>
             </div>
         </div>
 
-        <div class="flex justify-end pt-5 mt-4 border-t border-gray-200">
-            <a href="{{ route(config('app.admin_prefix') . '.articles.index') }}"
-                class="px-4 py-2 mr-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                Cancel
-            </a>
-            <button type="submit"
-                class="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                <svg wire:loading wire:target="save" class="w-4 h-4 mr-2 -ml-1 text-white animate-spin"
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between pt-5 mt-8 border-t border-gray-200 dark:border-gray-700">
+            <button type="button" x-show="step > 1" @click.prevent="$wire.previousStep()"
+                class="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                Previous
+            </button>
+            <div x-show="step === 1" class="w-full"></div> <!-- Spacer -->
+            <button type="button" x-show="step < totalSteps" @click.prevent="$wire.nextStep()"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                Next
+            </button>
+            <button type="submit" x-show="step === totalSteps"
+                class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                <svg wire:loading wire:target="save" class="inline w-4 h-4 mr-2 text-white animate-spin"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor"
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                     </path>
                 </svg>
-                {{ $articleId ? 'Update Article' : 'Create Article' }}
+                <span>{{ $articleId ? 'Update Article' : 'Create Article' }}</span>
             </button>
         </div>
     </form>

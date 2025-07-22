@@ -22,7 +22,7 @@
     <!-- Header with View All button -->
     <div class="flex flex-col items-start justify-between gap-3 px-4 mb-6 sm:flex-row sm:items-center">
         <h2 class="text-xl font-bold sm:text-2xl text-[#008000] dark:text-[#008000]">Find Our Church Near You</h2>
-        <a href="{{ route('ministry.churches') }}"
+        <a href="{{ route('churches') }}"
             class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white transition-colors rounded-lg bg-[#008000] hover:bg-[#008000] sm:text-base sm:w-auto dark:bg-emerald-500 dark:hover:bg-[#008000]">
             View All
         </a>

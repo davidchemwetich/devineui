@@ -181,33 +181,33 @@
 <div class="min-h-screen transition-colors duration-300 bg-gray-50 dark:bg-gray-900"
     x-data="{ activeCard: 0, teamMembers: {{ json_encode($aboutUs->team_members ?? []) }} }">
     <!-- Hero Section -->
-    <section class="relative py-20 text-white bg-stained-glass">
-        <div class="absolute inset-0 overflow-hidden">
-            <div
-                class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1567688993206-31c46363d983?auto=format&fit=crop&w=1920&q=80')] bg-cover opacity-10">
+    <div class="relative py-20 bg-[#008000]">
+        <div class="absolute inset-0 opacity-20 bg-pattern-overlay"></div>
+        <div class="container relative z-10 px-4 mx-auto">
+            <div class="max-w-3xl mx-auto text-center" x-data="{ loaded: false }"
+                x-init="setTimeout(() => loaded = true, 100)" x-transition:enter.duration.500ms>
+                <h1 class="text-4xl font-bold leading-tight text-white transition-all duration-500 transform md:text-5xl"
+                    :class="loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'">
+                    {{ $aboutUs->heading ?? 'Welcome to Our Church Family' }}
+                </h1>
+                <p class="mt-4 text-xl font-light text-[#ffffff] opacity-90">
+                    {{ $aboutUs->subheading ?? 'Walking in Faith, Growing in Grace' }}
+                </p>
             </div>
         </div>
-        <div class="container relative z-10 px-4 mx-auto text-center"
-            x-intersect="$el.classList.add('animate-fade-in-down')">
-            <h1 class="mb-6 text-4xl font-bold text-[#008000] md:text-5xl lg:text-6xl animated-gradient-text">
-                {{ $aboutUs->heading ?? 'Welcome to Our Church Family' }}
-            </h1>
-            <p class="text-xl font-medium text-[#008000] md:text-2xl opacity-90">
-                {{ $aboutUs->subheading ?? 'Walking in Faith, Growing in Grace' }}
-            </p>
-        </div>
-        <div class="absolute bottom-0 left-0 w-full overflow-hidden transform leading-0">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"
-                class="relative block w-full h-10 md:h-16 text-gray-50 dark:text-gray-900">
-                <path
-                    d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0Z"
-                    class="fill-current"></path>
-            </svg>
-        </div>
-    </section>
+    </div>
 
     <!-- Main Content Section -->
     <section class="py-16 dark:bg-gray-800">
+        {{-- <div class="container relative z-10 px-4 mx-auto text-center"
+        x-intersect="$el.classList.add('animate-fade-in-down')"> --}}
+        {{-- <h1 class="mb-6 text-4xl font-bold text-[#008000] md:text-5xl lg:text-6xl animated-gradient-text">
+            {{ $aboutUs->heading ?? 'Welcome to Our Church Family' }}
+        </h1>
+        <p class="text-xl font-medium text-[#008000] md:text-2xl opacity-90">
+            {{ $aboutUs->subheading ?? 'Walking in Faith, Growing in Grace' }}
+        </p> --}}
+    {{-- </div> --}}
         <div class="container px-4 mx-auto">
             <div class="grid items-center gap-12 md:grid-cols-2">
                 <!-- Content -->

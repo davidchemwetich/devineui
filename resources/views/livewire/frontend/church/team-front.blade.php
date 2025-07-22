@@ -64,7 +64,7 @@
                     <!-- Profile Image with Aspect Ratio -->
                     <div class="relative w-full pb-[100%] overflow-hidden rounded-t-2xl max-w-full">
                         <img src="{{ $member['profile_image'] ? asset('storage/' . $member['profile_image']) : asset('images/default-profile.jpg') }}" 
-                            alt="{{ $member['name'] }}"
+                            alt="{{ $member['name'] }}"  onerror="this.onerror=null;this.src='{{ asset('images/citwam/avatar.jpeg') }}';"
                             class="absolute inset-0 object-cover w-full h-full transition-transform duration-500 group-hover:scale-110">
                         <div
                             class="absolute inset-0 transition-opacity duration-500 opacity-0 bg-emerald-500/30 group-hover:opacity-100">

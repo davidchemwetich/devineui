@@ -46,7 +46,7 @@
                             class="object-cover w-full h-48 sm:h-64 md:h-80 lg:h-96" loading="lazy">
                         @else
                         <div class="flex items-center justify-center w-full h-48 sm:h-64 md:h-80 lg:h-96 bg-gradient-to-br from-green-50 to-blue-50">
-                            <svg class="w-20 h-20 text-green-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="w-20 h-20 text-[#008000]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
@@ -59,7 +59,7 @@
                         <!-- Header -->
                         <header class="mb-6">
                             <div class="flex flex-wrap items-center gap-3 mb-4">
-                                <span class="px-3 py-1 text-sm font-medium text-green-800 bg-green-100 rounded-full">{{ $article->category->name }}</span>
+                                <span class="px-3 py-1 text-sm font-medium text-[#008000] bg-green-100 rounded-full">{{ $article->category->name }}</span>
                                 <span class="flex items-center text-sm text-gray-500">
                                     <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -77,7 +77,7 @@
                                     {{ number_format($article->view_count) }} views
                                 </span>
                             </div>
-                            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-green-800 mb-3">{{ $article->title }}</h1>
+                            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#008000] mb-3">{{ $article->title }}</h1>
                             <p class="text-base sm:text-lg text-gray-600">{{ $article->excerpt }}</p>
                         </header>
 
@@ -91,7 +91,7 @@
                                         clip-rule="evenodd"></path>
                                 </svg>
                                 <div class="ml-3">
-                                    <p class="text-sm text-green-800 font-medium">Scripture Reference</p>
+                                    <p class="text-sm text-[#008000] font-medium">Scripture Reference</p>
                                     <p class="mt-1 text-md text-green-900">{{ $article->scripture_reference }}</p>
                                 </div>
                             </div>
@@ -134,7 +134,7 @@
                 <!-- Related articles -->
                 @if($relatedArticles->count() > 0)
                 <section class="mt-12">
-                    <h3 class="text-2xl font-bold text-green-800 mb-6">Related Articles</h3>
+                    <h3 class="text-2xl font-bold text-[#008000] mb-6">Related Articles</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         @foreach($relatedArticles as $related)
                         <a href="{{ route('blog.show', $related->slug) }}"
@@ -145,7 +145,7 @@
                                     class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300" loading="lazy">
                                 @else
                                 <div class="flex items-center justify-center w-full h-full bg-gradient-to-br from-gray-100 to-green-50">
-                                    <svg class="w-10 h-10 text-green-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg class="w-10 h-10 text-[#008000]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
@@ -154,7 +154,7 @@
                             </div>
                             <div class="p-4">
                                 <p class="text-sm text-gray-500 mb-2">{{ $related->published_at->format('M d, Y') }}</p>
-                                <h4 class="text-lg font-bold text-green-800 mb-2 group-hover:text-green-600 transition-colors">{{ Str::limit($related->title, 60) }}</h4>
+                                <h4 class="text-lg font-bold text-[#008000] mb-2 group-hover:text-green-600 transition-colors">{{ Str::limit($related->title, 60) }}</h4>
                                 <span class="inline-flex items-center text-sm font-medium text-blue-600 group-hover:text-blue-800">
                                     Read Article
                                     <svg class="w-4 h-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
@@ -175,7 +175,7 @@
             <aside class="lg:col-span-1 space-y-6">
                 <!-- Categories -->
                 <div class="p-6 bg-white rounded-2xl shadow-lg">
-                    <h3 class="text-lg font-bold text-green-800 mb-4">Categories</h3>
+                    <h3 class="text-lg font-bold text-[#008000] mb-4">Categories</h3>
                     <div class="space-y-2">
                         @foreach($categories as $category)
                         <a href="{{ route('blog.index') }}"
@@ -191,7 +191,7 @@
 
                 <!-- Author info -->
                 <div class="p-6 bg-white rounded-2xl shadow-lg">
-                    <h3 class="text-lg font-bold text-green-800 mb-4">About the Author</h3>
+                    <h3 class="text-lg font-bold text-[#008000] mb-4">About the Author</h3>
                     <div class="flex items-center mb-4">
                         @if($article->user && $article->user->profile_photo_path)
                         <img src="{{ asset('storage/' . $article->user->profile_photo_path) }}"
@@ -203,7 +203,7 @@
                         </div>
                         @endif
                         <div>
-                            <h4 class="font-medium text-green-800">{{ $article->user ? $article->user->name : 'Anonymous' }}</h4>
+                            <h4 class="font-medium text-[#008000]">{{ $article->user ? $article->user->name : 'Anonymous' }}</h4>
                             <p class="text-sm text-gray-600">{{ $article->user && $article->user->bio ? $article->user->bio : 'Writer' }}</p>
                         </div>
                     </div>
@@ -250,11 +250,11 @@
 
                 <!-- Popular tags -->
                 <div class="p-6 bg-white rounded-2xl shadow-lg">
-                    <h3 class="text-lg font-bold text-green-800 mb-4">Popular Tags</h3>
+                    <h3 class="text-lg font-bold text-[#008000] mb-4">Popular Tags</h3>
                     <div class="flex flex-wrap gap-2">
                         @foreach($article->tags ?? [] as $tag)
                         <a href="{{ route('blog.index') }}?tag={{ $tag->slug }}"
-                            class="px-3 py-1 text-sm font-medium text-green-700 bg-green-100 rounded-full hover:bg-green-200 transition-colors">
+                            class="px-3 py-1 text-sm font-medium text-green-700 bg-green-100 rounded-full hover:bg-[#008000] transition-colors">
                             {{ $tag->name }}
                         </a>
                         @endforeach
@@ -266,7 +266,7 @@
 
                 <!-- Newsletter signup -->
                 <div class="p-6 bg-white rounded-2xl shadow-lg">
-                    <h3 class="text-lg font-bold text-green-800 mb-4">Subscribe to Newsletter</h3>
+                    <h3 class="text-lg font-bold text-[#008000] mb-4">Subscribe to Newsletter</h3>
                     <p class="text-sm text-gray-600 mb-4">Stay updated with our latest articles and insights.</p>
                     <form class="space-y-3">
                         <input type="email" placeholder="Your email address"

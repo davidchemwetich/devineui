@@ -1,7 +1,8 @@
 <nav
     class="flex-1 px-3 py-4 space-y-1 overflow-y-auto text-gray-700 border-r border-gray-200 dark:text-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 dark:border-gray-700">
     <!-- Dashboard -->
-    <a href="{{ route(config('app.admin_prefix') . '.dashboard') }}" x-bind:class="activeMenu === 'dashboard' ? 'sidebar-link active' : 'sidebar-link'"
+    <a href="{{ route(config('app.admin_prefix') . '.dashboard') }}"
+        x-bind:class="activeMenu === 'dashboard' ? 'sidebar-link active' : 'sidebar-link'"
         @click="activeMenu = 'dashboard'; sidebarOpen = false"
         class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-white hover:shadow-sm dark:hover:bg-gray-800 border border-transparent hover:border-gray-200 dark:hover:border-gray-600">
         <div
@@ -48,7 +49,7 @@
                 class="block px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                 Create Ministries
             </a>
-            <a href=""
+            <a href="{{ route(config('app.admin_prefix', 'shield') . '.church.service-schedule-settings') }}"
                 x-bind:class="activeMenu === 'departments' ? 'text-orange-600 dark:text-orange-400 font-semibold' : 'text-gray-600 dark:text-gray-300'"
                 @click="activeMenu = 'departments'; sidebarOpen = false"
                 class="block px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">

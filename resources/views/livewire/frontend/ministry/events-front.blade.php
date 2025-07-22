@@ -40,13 +40,13 @@
             </div>
 
             <!-- Swiper Container -->
-            <div class="relative">
+            <div class="relative pb-16"> <!-- Added padding-bottom to accommodate pagination -->
                 <!-- Swiper -->
-                <div class="swiper" x-ref="swiperContainer">
+                <div class="swiper h-full" x-ref="swiperContainer">
                     <div class="swiper-wrapper">
                         @foreach($events as $event)
-                        <div class="swiper-slide" style="width: 320px;">
-                            <div class="h-full p-6 bg-white shadow-lg dark:bg-gray-800 rounded-xl">
+                        <div class="swiper-slide" style="width: 320px; height: auto; min-height: 300px;">
+                            <div class="h-full p-6 bg-white shadow-lg dark:bg-gray-800 rounded-xl flex flex-col">
                                 <div class="flex items-start justify-between mb-4">
                                     <h3 class="text-lg font-bold text-[#008000] dark:text-emerald-200">
                                         {{ $event->title }}
@@ -64,7 +64,7 @@
                                     </span>
 
                                 </div>
-                                <p class="mb-4 text-gray-600 dark:text-emerald-100 line-clamp-3">
+                                <p class="mb-4 text-gray-600 dark:text-emerald-100 line-clamp-3 flex-grow">
                                     {{ Str::limit($event->description, 100) }}
                                 </p>
                                 <div class="pt-4 space-y-2 border-t border-emerald-50 dark:border-gray-700">
@@ -113,9 +113,21 @@
                     </div>
 
                     <!-- Navigation buttons with Tailwind styling -->
+                    <div class="swiper-button-next absolute right-0 top-1/2 transform -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-[#008000]/70 text-white shadow-md z-10 focus:outline-none after:hidden">
+                        <!-- Right arrow icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </div>
+                    <div class="swiper-button-prev absolute left-0 top-1/2 transform -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-[#008000]/70 text-white shadow-md z-10 focus:outline-none after:hidden">
+                        <!-- Left arrow icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                        </svg>
+                    </div>
 
                     <!-- Pagination dots -->
-                    <div class="swiper-pagination !bottom-0 !-mb-10"></div>
+                    <div class="swiper-pagination bottom-0"></div>
                 </div>
             </div>
         </div>
@@ -138,11 +150,12 @@
                     navigation: {
                         nextEl: '.swiper-button-next',
                         prevEl: '.swiper-button-prev',
-                    }
+                    },
+                    // Add auto height for better content display
+                    autoHeight: true
                 });
             }
         });
     </script>
     @endPushOnce
-
 </div>

@@ -34,8 +34,11 @@
             <div
                 class="relative overflow-hidden transition-all duration-300 bg-white rounded-lg shadow-lg group hover:shadow-xl">
                 <div class="w-full overflow-hidden bg-gray-200 h-60 aspect-w-1 aspect-h-1">
-                    <img src="{{ asset('images/' . $project['image']) }}" alt="{{ $project['title'] }}"
-                        class="object-cover w-full h-full group-hover:opacity-75">
+                    <img src="{{ asset('images/' . $project['image']) }}"
+                    alt="{{ asset('images/citwam/fallback.png') }}"
+                    class="object-cover w-full h-full group-hover:opacity-75"
+                    onerror="this.onerror=null;this.src='{{ asset('images/citwam/fallback.png') }}';">
+               
                 </div>
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-2">

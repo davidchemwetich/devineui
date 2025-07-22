@@ -3,6 +3,9 @@
 use App\Http\Controllers\Shield\ShieldController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\UserController;
+use App\Livewire\Frontend\Chapel\ChurchDetail;
+use App\Livewire\Frontend\Chapel\ChurchList;
+use App\Livewire\Frontend\Settings\InfoHub;
 use App\Livewire\Shield\Article\ArticleForm;
 use App\Livewire\Shield\Article\ArticleManagement;
 use App\Livewire\Shield\Category\CategoryForm;
@@ -33,10 +36,10 @@ use App\Livewire\Frontend\Church\SermonsList;
 use App\Livewire\Frontend\Develop\ProjectsComponent;
 use App\Livewire\Frontend\Settings\Aboutsite;
 use App\Livewire\Frontend\Settings\DonationPage;
-use App\Livewire\Frontend\Settings\FrontChurch;
 use App\Livewire\Frontend\Settings\MinistryGallery;
 use App\Livewire\Frontend\Ministry\MinistryShowcase;
 use App\Livewire\Frontend\Ministry\EventsDisplay;
+use App\Livewire\Shield\Settings\ServiceScheduleSettings;
 use Illuminate\Support\Facades\Route;
 
 
@@ -50,27 +53,42 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 
 // About Us page using Livewire component
 Route::get('/about', Aboutsite::class)->name('about');
+
+
 Route::get('/ministries', MinistryShowcase::class)->name('ministries.index');
 Route::get('/ministries/{id}', MinistryShowcase::class)->name('ministries.show');
 // Ministry Gallery route
 Route::get('/galleries', MinistryGallery::class)->name('ministry.galleries');
+
 Route::get('/ministry-events', EventsDisplay::class)->name('frontend.ministry.events');
+
+
 // Church Directory Frontend Routes
-Route::get('/churches', FrontChurch::class)->name('ministry.churches');
+Route::get('/churches', ChurchList::class)->name('churches');
+Route::get('/churches/{id}', ChurchDetail::class)->name('church.detail');
+
+
+// Church Directory Frontend Routes
 // All sermons page
 Route::get('/sermons', SermonsList::class)->name('sermons');
 //Donate Route
 Route::get('/donate', DonationPage::class)->name('donate');
+
+
 // Front-end Routes for the Church Blog
 Route::get('/blog', ArticleIndex::class)->name('blog.index');
 Route::get('/blog/{slug}', ArticleShow::class)->name('blog.show');
+
 // Church Leadership route
 Route::get('/leadership', ChurchLeadership::class)->name('church.leadership');
+
+Route::get('/info-hub', InfoHub::class)->name('frontend.info-hub');
+
 // Church Development Projects Route
 Route::get('/develop', ProjectsComponent::class)->name('frontend.develop');
+
 // You can also create additional routes for specific project details if needed
 Route::get('/develop/{projectId}', ProjectsComponent::class)->name('frontend.develop.project');
-
 
 
 // Jetstream normal user routes
@@ -153,6 +171,10 @@ Route::middleware([
             Route::get('/sermons/create', SermonForm::class)->name('sermons.create');
             // Edit existing sermon
             Route::get('/sermons/{sermonId}/edit', SermonForm::class)->name('sermons.edit');
+
+            // Service Times & Schedule
+            Route::get('/service-schedule-settings', ServiceScheduleSettings::class)
+                ->name('service-schedule-settings');
         });
 
         // Church Management Routes

@@ -65,8 +65,13 @@
                     class="flex flex-col overflow-hidden transition-all duration-300 ease-in-out bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 hover:shadow-xl group">
                     {{-- Church Image --}}
                     <div class="relative w-full h-48 overflow-hidden">
-                        <img src="{{ asset('storage/' . $church->thumbnail) }}" alt="{{ $church->name }} Thumbnail"
-                            class="object-cover w-full h-full transition-transform duration-500 ease-in-out group-hover:scale-105">
+                    <img 
+                         src="{{ asset('storage/' . $church->thumbnail) }}" 
+                         alt="{{ $church->name }} Thumbnail"
+                               loading="lazy"
+                              onerror="this.onerror=null;this.src='{{ asset('images/citwam/avatar.jpeg') }}';"
+                               class="object-cover w-full h-full transition-transform duration-500 ease-in-out group-hover:scale-105">
+
                         <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent">
                         </div>
                     </div>

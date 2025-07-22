@@ -8,7 +8,9 @@
 
     <title>{{ config('app.name', 'ByNetOps') }}</title>
     <!-- For favicon in your main layout -->
-    <link rel="icon" href="{{ asset('storage/' . $siteSettings->favicon) }}" type="image/x-icon">
+    <link rel="icon"
+        href="{{ $siteSettings && $siteSettings->favicon ? asset('storage/' . $siteSettings->favicon) : asset('images/default-favicon.ico') }}"
+        type="image/x-icon">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

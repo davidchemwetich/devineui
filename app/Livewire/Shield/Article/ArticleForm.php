@@ -29,18 +29,36 @@ class ArticleForm extends Component
     public $scripture_reference;
     public $published_at;
 
-    protected $rules = [
-        'title' => 'required|string|max:255',
-        'slug' => 'required|string|max:255|unique:articles,slug',
-        'excerpt' => 'required|string',
-        'body' => 'required|string',
-        'category_id' => 'nullable|exists:categories,id',
-        'is_featured' => 'boolean',
-        'is_published' => 'boolean',
-        'featured_image' => 'nullable|image|max:2048', // 2MB max image size
-        'scripture_reference' => 'nullable|string|max:255',
-        'published_at' => 'nullable|date',
-    ];
+    public $step = 1;
+    public $totalSteps = 4;
+
+    protected function rules()
+    {
+        $rules = [
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:articles,slug,' . $this->articleId,
+            'excerpt' => 'required|string|max:300',
+            'body' => 'required|string',
+            'category_id' => 'nullable|exists:categories,id',
+            'is_featured' => 'boolean',
+            'is_published' => 'boolean',
+            'featured_image' => 'nullable|image|max:2048',
+            'scripture_reference' => 'nullable|string|max:255',
+            'published_at' => 'nullable|date',
+        ];
+
+        // Only validate fields for the current step
+        if ($this->step === 1) {
+            return array_intersect_key($rules, array_flip(['title', 'slug']));
+        } elseif ($this->step === 2) {
+            return array_intersect_key($rules, array_flip(['excerpt', 'body']));
+        } elseif ($this->step === 3) {
+            return array_intersect_key($rules, array_flip(['featured_image', 'scripture_reference']));
+        }
+
+        return $rules;
+    }
+
 
     public function mount($articleId = null)
     {
@@ -48,7 +66,6 @@ class ArticleForm extends Component
             $this->articleId = $articleId;
             $this->loadArticle();
         } else {
-            // Set default published_at to current date and time
             $this->published_at = now()->format('Y-m-d H:i:s');
         }
     }
@@ -65,25 +82,17 @@ class ArticleForm extends Component
         $this->is_published = $article->is_published;
         $this->scripture_reference = $article->scripture_reference;
         $this->published_at = $article->published_at ? $article->published_at->format('Y-m-d H:i:s') : null;
-        
-        // Handle featured image display
+
         if ($article->featured_image) {
             $this->featuredImageUrl = Storage::url($article->featured_image);
         }
-
-        // Update unique validation rule for slug when editing
-        $this->rules['slug'] = 'required|string|max:255|unique:articles,slug,' . $this->articleId;
     }
 
     public function save()
     {
         $this->validate();
 
-        // Handle the featured image upload
-        $imagePath = null;
-        if ($this->featured_image) {
-            $imagePath = $this->featured_image->store('articles/images', 'public');
-        }
+        $imagePath = $this->featured_image ? $this->featured_image->store('articles/images', 'public') : null;
 
         $data = [
             'user_id' => Auth::id(),
@@ -98,32 +107,24 @@ class ArticleForm extends Component
             'published_at' => $this->is_published && $this->published_at ? $this->published_at : null,
         ];
 
-        // Only update the image path if a new image is uploaded
         if ($imagePath) {
             $data['featured_image'] = $imagePath;
         } elseif ($this->removeImage) {
             $data['featured_image'] = null;
         }
 
-        $article = Article::updateOrCreate(
-            ['id' => $this->articleId],
-            $data
-        );
+        Article::updateOrCreate(['id' => $this->articleId], $data);
 
-        // Instead of emit(), use dispatch() in Livewire v3
         $this->dispatch('article-created');
-
         session()->flash('message', 'Article saved successfully.');
 
-        // Return redirect for immediate redirection
         return $this->redirect(route(config('app.admin_prefix') . '.articles.index'), navigate: true);
     }
 
-    public function updatedTitle()
+    public function updatedTitle($value)
     {
-        // Auto-generate slug from title if the slug is empty
         if (empty($this->slug)) {
-            $this->slug = Str::slug($this->title);
+            $this->slug = Str::slug($value);
         }
     }
 
@@ -139,18 +140,27 @@ class ArticleForm extends Component
         $this->removeImage = true;
     }
 
-    // Add a custom wire:model handler for published_at to use with a datepicker
     public function updatedPublishedAt($value)
     {
-        if (empty($value)) {
-            $this->published_at = null;
-        } else {
-            try {
-                // Try to parse the date
-                $this->published_at = Carbon::parse($value)->format('Y-m-d H:i:s');
-            } catch (\Exception $e) {
-                // If parsing fails, keep the original value
-            }
+        try {
+            $this->published_at = Carbon::parse($value)->format('Y-m-d H:i:s');
+        } catch (\Exception $e) {
+            // Keep original value on parsing failure
+        }
+    }
+
+    public function nextStep()
+    {
+        $this->validate();
+        if ($this->step < $this->totalSteps) {
+            $this->step++;
+        }
+    }
+
+    public function previousStep()
+    {
+        if ($this->step > 1) {
+            $this->step--;
         }
     }
 

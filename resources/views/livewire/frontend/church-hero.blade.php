@@ -5,7 +5,7 @@
         slides: [{
                 image: '{{ asset('images/citwam/citwam1.jpg') }}',
                 title: 'We subscribe to the following beliefs',
-                subtitle: 'The Only Way',
+                subtitle: 'Christ is the Way',
                 verse: 'Jesus answered, ‘I am the way and the truth and the life. No one comes to the Father except through me',
                 buttonClass: 'bg-emerald-600 hover:bg-emerald-700',
                 verseReference: '— John 14:6'
@@ -14,7 +14,7 @@
             {
                 image: '{{ asset('images/citwam/citwam2.jpg') }}',
                 title: 'We subscribe to the following beliefs',
-                subtitle: 'The Only Way',
+                subtitle: 'Christ is the Way',
                 verse: 'Jesus answered, ‘I am the way and the truth and the life. No one comes to the Father except through me',
                 buttonClass: 'bg-emerald-600 hover:bg-emerald-700',
                 verseReference: '— John 14:6'
@@ -23,7 +23,7 @@
             {
                 image: '{{ asset('images/citwam/citwam3.jpg') }}',
                 title: 'We subscribe to the following beliefs',
-                subtitle: 'The Only Way',
+                subtitle: 'Christ is the Way',
                 verse: 'Jesus answered, ‘I am the way and the truth and the life. No one comes to the Father except through me',
                 buttonClass: 'bg-emerald-600 hover:bg-emerald-700',
                 verseReference: '— John 14:6'
@@ -73,7 +73,7 @@
                                     </svg>
                                 </div>
                                 <p x-text="slide.subtitle"
-                                    class="mb-1 text-lg font-bold sm:text-xl md:text-2xl text-emerald-800"></p>
+                                    class="mb-1 text-md font-bold sm:text-xl md:text-xl text-[#008000]"></p>
                                 <div class="relative pl-6 md:pl-10">
                                     <div class="absolute top-0 left-0 text-2xl md:text-4xl text-[#008000]">"</div>
                                     <p x-text="slide.verse"
