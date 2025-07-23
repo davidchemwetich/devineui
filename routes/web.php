@@ -3,9 +3,6 @@
 use App\Http\Controllers\Shield\ShieldController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\UserController;
-use App\Livewire\Frontend\Chapel\ChurchDetail;
-use App\Livewire\Frontend\Chapel\ChurchList;
-use App\Livewire\Frontend\Settings\InfoHub;
 use App\Livewire\Shield\Article\ArticleForm;
 use App\Livewire\Shield\Article\ArticleManagement;
 use App\Livewire\Shield\Category\CategoryCrud;
@@ -27,11 +24,15 @@ use App\Livewire\Shield\Settings\GeneralSettings;
 use App\Livewire\Shield\Region\Index as RegionIndex;
 use App\Livewire\Shield\Cluster\Index as ClusterIndex;
 
+use App\Livewire\Frontend\Chapel\ChurchDetail;
+use App\Livewire\Frontend\Chapel\ChurchList;
+use App\Livewire\Frontend\Project\ProjectsComponent;
+use App\Livewire\Frontend\Project\ProjectShowComponent;
+use App\Livewire\Frontend\Settings\InfoHub;
 use App\Livewire\Frontend\Article\ArticleIndex;
 use App\Livewire\Frontend\Article\ArticleShow;
 use App\Livewire\Frontend\Church\ChurchLeadership;
 use App\Livewire\Frontend\Church\SermonsList;
-use App\Livewire\Frontend\Develop\ProjectsComponent;
 use App\Livewire\Frontend\Settings\Aboutsite;
 use App\Livewire\Frontend\Settings\DonationPage;
 use App\Livewire\Frontend\Settings\MinistryGallery;
@@ -39,8 +40,6 @@ use App\Livewire\Frontend\Ministry\MinistryShowcase;
 use App\Livewire\Frontend\Ministry\EventsDisplay;
 use App\Livewire\Shield\Settings\ServiceScheduleSettings;
 use Illuminate\Support\Facades\Route;
-
-
 
 
 // Home Route
@@ -65,6 +64,9 @@ Route::get('/sermons', SermonsList::class)->name('sermons');
 //Donate Route
 Route::get('/donate', DonationPage::class)->name('donate');
 
+// Project Routes
+Route::get('/projects', ProjectsComponent::class)->name('projects.index');
+Route::get('/project/{slug}', ProjectShowComponent::class)->name('project.show');
 
 // Front-end Routes for the Church Blog
 Route::get('/blog', ArticleIndex::class)->name('blog.index');
@@ -74,12 +76,6 @@ Route::get('/blog/{slug}', ArticleShow::class)->name('blog.show');
 Route::get('/leadership', ChurchLeadership::class)->name('church.leadership');
 
 Route::get('/info-hub', InfoHub::class)->name('frontend.info-hub');
-
-// Church Development Projects Route
-Route::get('/develop', ProjectsComponent::class)->name('frontend.develop');
-
-// You can also create additional routes for specific project details if needed
-Route::get('/develop/{projectId}', ProjectsComponent::class)->name('frontend.develop.project');
 
 
 // Jetstream normal user routes
@@ -198,6 +194,15 @@ Route::middleware([
             Route::get('types', \App\Livewire\Shield\Project\ProjectType::class)
                 ->name('types.index');
             // (the upcoming Project stepper form will go here next)
+            // Projects
+            Route::get('/', \App\Livewire\Shield\Project\ProjectIndex::class)
+                ->name('index');
+
+            Route::get('create', \App\Livewire\Shield\Project\ProjectForm::class)
+                ->name('create');
+
+            Route::get('{projectId}/edit', \App\Livewire\Shield\Project\ProjectForm::class)
+                ->name('edit');
         });
     });
 

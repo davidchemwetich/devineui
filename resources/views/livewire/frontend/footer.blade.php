@@ -1,18 +1,20 @@
 <footer x-data="{ showBackToTop: false }" @scroll.window="showBackToTop = (window.pageYOffset > 200)" class="relative">
-    <!-- Back to Top Button -->
+
+    <!-- Back-to-Top -->
     <button x-show="showBackToTop" x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 transform translate-y-2"
-        x-transition:enter-end="opacity-100 transform translate-y-0"
-        class="fixed p-3 transition-colors rounded-full shadow-lg bottom-6 right-6 bg-emerald-700 hover:bg-emerald-600"
-        @click="window.scrollTo({ top: 0, behavior: 'smooth' })">
+        x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+        class="fixed bottom-6 right-6 z-50 p-3 rounded-full shadow-lg bg-[#000fff] hover:bg-[#0000cc] transition-colors"
+        @click="window.scrollTo({top: 0, behavior: 'smooth'})">
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
         </svg>
     </button>
 
-    <div class="w-full bg-[#008000] bg-opacity-50 backdrop-blur-sm">
-        <div class="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 lg:py-16">
+    <!-- Main Footer -->
+    <div class="w-full bg-[#008000]">
+        <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
             <div class="grid grid-cols-1 gap-8 md:grid-cols-4 lg:gap-12">
+
                 <!-- Church Info -->
                 <div class="md:col-span-2">
                     <div class="flex items-center mb-6">
@@ -20,87 +22,86 @@
                         <img class="w-12 h-12 rounded-lg" src="{{ Storage::url($settings->institution_logo) }}"
                             alt="Church Logo">
                         @endif
-                        <h2 class="ml-3 text-2xl font-bold text-black dark:to-gray-100 bg-clip-text">
+                        <h2 class="ml-3 text-2xl font-bold text-white">
                             Christ Is the Way Ministries
                         </h2>
                     </div>
-                    <p class="mb-6 text-sm leading-relaxed text-black/70 dark:text-white/70">
+
+                    <p class="mb-6 text-sm leading-relaxed text-white/80">
                         {{ $settings->about ?? 'Reaching the world with the Gospel of Christ through faith, love, and
                         discipleship.' }}
                     </p>
 
-                    <!-- Newsletter Subscription -->
+                    <!-- Newsletter -->
                     <div x-data="{ email: '', submitted: false }" class="mb-6">
-                        <h3 class="mb-3 font-semibold text-black dark:text-white">Join Our Newsletter</h3>
+                        <h3 class="mb-3 font-semibold text-white">Join Our Newsletter</h3>
                         <form @submit.prevent="submitted = true" class="flex gap-2">
                             <input type="email" x-model="email" required
-                                class="flex-1 px-4 py-2 text-sm text-black bg-white border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-emerald-300"
+                                class="flex-1 px-4 py-2 text-sm border border-gray-300 rounded-lg bg-white/10 placeholder-white/70 text-white focus:ring-2 focus:ring-[#000fff]"
                                 placeholder="Enter your email">
-                            <button type="submit" class="px-4 py-2 text-sm text-white transition-colors bg-[#000fff]">
+                            <button type="submit"
+                                class="px-4 py-2 text-sm text-white transition-colors bg-[#000fff] hover:bg-[#0000cc] rounded-lg">
                                 Subscribe
                             </button>
                         </form>
-                        <p x-show="submitted" class="mt-2 text-sm text-black/70 dark:text-white/70">
+                        <p x-show="submitted" class="mt-2 text-sm text-white/70">
                             Thank you for subscribing!
                         </p>
                     </div>
+
+                    <!-- Google Play -->
+                    <a href="https://play.google.com/store/apps/details?id=com.your.church.app" target="_blank"
+                        rel="noopener" class="inline-block">
+                        <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                            alt="Get it on Google Play" class="h-12">
+                    </a>
                 </div>
 
                 <!-- Ministries -->
                 <div>
-                    <h3 class="mb-4 text-sm font-semibold text-black uppercase dark:text-white">Ministries</h3>
+                    <h3 class="mb-4 text-sm font-semibold text-white uppercase tracking-wider">Ministries</h3>
                     <ul class="space-y-2">
                         <li><a href="{{ route('ministries.index') }}"
-                                class="text-sm transition-colors text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Children's
-                                Ministry</a></li>
+                                class="text-sm text-white/70 hover:text-white transition-colors">Children's Ministry</a>
+                        </li>
                         <li><a href="{{ route('ministries.index') }}"
-                                class="text-sm transition-colors text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Youth
-                                Fellowship</a></li>
+                                class="text-sm text-white/70 hover:text-white transition-colors">Youth Fellowship</a>
+                        </li>
                         <li><a href="{{ route('ministries.index') }}"
-                                class="text-sm transition-colors text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Women
-                                of
-                                Purpose</a></li>
+                                class="text-sm text-white/70 hover:text-white transition-colors">Women of Purpose</a>
+                        </li>
                         <li><a href="{{ route('churches') }}"
-                                class="text-sm transition-colors text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Explore
-                                Ministries</a>
+                                class="text-sm text-white/70 hover:text-white transition-colors">Explore Ministries</a>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Connect -->
                 <div>
-                    <h3 class="mb-4 text-sm font-semibold text-black uppercase dark:text-white">Connect</h3>
+                    <h3 class="mb-4 text-sm font-semibold text-white uppercase tracking-wider">Connect</h3>
                     <ul class="space-y-2">
                         <li><a href="{{ route('contact') }}"
-                                class="text-sm transition-colors text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Contact
-                                Us</a>
-                        </li>
+                                class="text-sm text-white/70 hover:text-white transition-colors">Contact Us</a></li>
                         <li><a href="{{ route('frontend.info-hub') }}"
-                                class="text-sm transition-colors text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Church-Bulletin</a>
+                                class="text-sm text-white/70 hover:text-white transition-colors">Church-Bulletin</a>
                         </li>
                         <li><a href="https://church.test/privacy-policy"
-                                class="text-sm transition-colors text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Privacy
-                                Policy</a>
-                        </li>
+                                class="text-sm text-white/70 hover:text-white transition-colors">Privacy Policy</a></li>
                         <li><a href="https://church.test/terms-of-service"
-                                class="text-sm transition-colors text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">Terms
-                                of
-                                Service</a>
+                                class="text-sm text-white/70 hover:text-white transition-colors">Terms of Service</a>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Divider -->
-            <div class="my-8 border-t border-gray-300 dark:border-gray-600"></div>
+            <div class="my-8 border-t border-white/20"></div>
 
-            <!-- Bottom Section -->
+            <!-- Bottom -->
             <div class="md:flex md:items-center md:justify-between">
-                <!-- Social Media -->
-                <div class="flex mb-4 space-x-4 md:mb-0">
-                    @foreach ($socialLinks as $platform => $url)
-                    <a href="{{ $url }}"
-                        class="transition-colors text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">
+                <!-- Social -->
+                <div class="flex space-x-4 mb-4 md:mb-0">
+                    @foreach($socialLinks as $platform => $url)
+                    <a href="{{ $url }}" class="text-white/70 hover:text-white transition-colors">
                         @switch(strtolower($platform))
                         @case('facebook')
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -108,14 +109,12 @@
                                 d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                         </svg>
                         @break
-
                         @case('youtube')
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                             <path
                                 d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                         </svg>
                         @break
-
                         @case('instagram')
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                             <path
@@ -126,32 +125,31 @@
                     </a>
                     @endforeach
                 </div>
-
+                <!-- Watermark Signature -->
+                <a href="https://netops.ink/sales" target="_blank" rel="noopener"
+                    class="fixed flex items-center px-3 py-1 text-sm transition-all duration-300 rounded-full shadow-lg bg-gradient-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] shadow-cyan-900/30 backdrop-blur-sm hover:bg-gradient-to-r hover:from-cyan-500 hover:to-emerald-400 hover:shadow-cyan-900/40 hover:scale-105 bottom-6 left-6 gap-x-1 group"
+                    x-data="{ showSignature: true }" x-show="showSignature"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:leave="transition ease-in duration-200">
+                    <span class="relative flex items-center pr-0.5">
+                        <svg class="w-4 h-4 shrink-0 stroke-white" fill="none" stroke-width="1.8" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <span class="ml-1 text-xs font-semibold text-white drop-shadow-md">
+                            Built by <span
+                                class="transition-colors text-cyan-100 group-hover:text-cyan-50">NetOps</span>
+                        </span>
+                    </span>
+                    <span
+                        class="absolute inset-0 rounded-full opacity-10 bg-gradient-to-r from-white to-transparent"></span>
+                </a>
                 <!-- Copyright -->
-                <div class="text-sm text-black/70 dark:text-white/70">
+                <div class="text-sm text-white/70">
                     © {{ date('Y') }} Christ Is the Way Ministries. All rights reserved.
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Watermark Signature -->
-    <a href="https://netops.vercel.app/" target="_blank" rel="noopener"
-        class="fixed flex items-center px-3 py-1 text-sm transition-all duration-300 rounded-full shadow-lg bg-gradient-to-r from-[#374151] via-[#f43f5e] to-[#fb923c] shadow-cyan-900/30 backdrop-blur-sm hover:bg-gradient-to-r hover:from-cyan-500 hover:to-emerald-400 hover:shadow-cyan-900/40 hover:scale-105 bottom-6 left-6 gap-x-1 group"
-        x-data="{ showSignature: true }" x-show="showSignature" x-transition:enter="transition ease-out duration-300"
-        x-transition:leave="transition ease-in duration-200">
-        <span class="relative flex items-center pr-0.5">
-            <svg class="w-4 h-4 shrink-0 stroke-white" fill="none" stroke-width="1.8" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" stroke-linecap="round"
-                    stroke-linejoin="round" />
-            </svg>
-            <span class="ml-1 text-xs font-semibold text-white drop-shadow-md">
-                Built by <span class="transition-colors text-cyan-100 group-hover:text-cyan-50">NetOps</span>
-            </span>
-        </span>
-        <span class="absolute inset-0 rounded-full opacity-10 bg-gradient-to-r from-white to-transparent"></span>
-    </a>
-
-
 </footer>

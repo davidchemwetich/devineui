@@ -120,7 +120,20 @@
                 x-bind:class="activeMenu === 'analytics.performance' ? 'text-pink-600 dark:text-pink-400 font-medium' : 'text-gray-500 dark:text-gray-400'"
                 @click="activeMenu = 'analytics.performance'; sidebarOpen = false"
                 class="block px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-               Project Types
+                Project Types
+            </a>
+            <a href="{{ route(config('app.admin_prefix', 'shield') . '.project.index') }}"
+                x-bind:class="activeMenu === 'analytics.performance' ? 'text-pink-600 dark:text-pink-400 font-medium' : 'text-gray-500 dark:text-gray-400'"
+                @click="activeMenu = 'analytics.performance'; sidebarOpen = false"
+                class="block px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                View Projects
+            </a>
+
+            <a href="{{ route(config('app.admin_prefix', 'shield') . '.project.index') }}"
+                x-bind:class="activeMenu === 'analytics.performance' ? 'text-pink-600 dark:text-pink-400 font-medium' : 'text-gray-500 dark:text-gray-400'"
+                @click="activeMenu = 'analytics.performance'; sidebarOpen = false"
+                class="block px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                Project Management
             </a>
         </div>
     </div>

@@ -41,48 +41,40 @@
                     </a>
                     @endforeach
 
-                    <!-- About Us Dropdown -->
-
-                    <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false"
-                        class="relative inline-block text-left">
+                    <!-- Desktop About Us -->
+                    <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" class="relative">
                         <button type="button"
-                            class="relative flex items-center px-3 py-2.5 text-sm font-medium text-gray-800 transition-all hover:text-blue-600 dark:text-white dark:hover:text-blue-100 group">
+                            class="relative flex items-center px-3 py-2.5 text-sm font-medium text-gray-800 transition-all hover:text-blue-600 dark:text-white dark:hover:text-blue-100">
                             About Us
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24"
+                            <svg class="w-4 h-4 ml-1 transition-transform duration-200" :class="{ 'rotate-180': open }"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 9l-7 7-7-7" />
                             </svg>
-                            <span
-                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-200 transition-all duration-300 group-hover:w-full"></span>
                         </button>
-                        <div x-show="open" x-transition:enter="transition ease-out duration-100"
-                            x-transition:enter-start="transform opacity-0 scale-95"
-                            x-transition:enter-end="transform opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-75"
-                            x-transition:leave-start="transform opacity-100 scale-100"
-                            x-transition:leave-end="transform opacity-0 scale-95"
-                            class="absolute left-0 z-50 mt-1 origin-top-left bg-white rounded-md shadow-lg w-80 ring-1 ring-black ring-opacity-5 focus:outline-none"
-                            style="display: none;">
-                            <div class="p-4">
-                                <div class="grid grid-cols-2 gap-2">
-                                    <a href="{{ route('about') }}"
-                                        class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                        <span class="text-sm font-medium text-center text-gray-700">Who we are</span>
-                                    </a>
 
-                                    <a href="{{ route('churches') }}"
-                                        class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                        <span class="text-sm font-medium text-center text-gray-700">Regional
-                                            Presence</span>
-                                    </a>
-
-                                    <a href="{{ route('church.leadership') }}"
-                                        class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                        <span class="text-sm font-medium text-center text-gray-700">Leadership</span>
-                                    </a>
-
-                                </div>
+                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 -translate-y-2"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 -translate-y-2"
+                            class="absolute left-0 mt-2 w-72 origin-top-left rounded-xl bg-white shadow-lg ring-1 ring-black/5 z-50"
+                            style="display:none;">
+                            <div class="p-5 grid grid-cols-1 gap-3">
+                                <a href="{{ route('about') }}"
+                                    class="flex items-center p-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 transition-colors">
+                                    <span class="mr-3 text-blue-500">👥</span> Who we are
+                                </a>
+                                <a href="{{ route('churches') }}"
+                                    class="flex items-center p-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 transition-colors">
+                                    <span class="mr-3 text-green-500">🌍</span> Regional Presence
+                                </a>
+                                <a href="{{ route('church.leadership') }}"
+                                    class="flex items-center p-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 transition-colors">
+                                    <span class="mr-3 text-purple-500">👑</span> Leadership
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -90,60 +82,40 @@
 
 
 
-                    <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false"
-                        class="relative inline-block text-left">
+                    <!-- Desktop Ministries -->
+                    <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" class="relative">
                         <button type="button"
-                            class="relative flex items-center px-3 py-2.5 text-sm font-medium text-gray-800 transition-all hover:text-blue-600 dark:text-white dark:hover:text-blue-100 group">
+                            class="relative flex items-center px-3 py-2.5 text-sm font-medium text-gray-800 transition-all hover:text-blue-600 dark:text-white dark:hover:text-blue-100">
                             Ministries
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24"
+                            <svg class="w-4 h-4 ml-1 transition-transform duration-200" :class="{ 'rotate-180': open }"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 9l-7 7-7-7" />
                             </svg>
-                            <span
-                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-200 transition-all duration-300 group-hover:w-full"></span>
                         </button>
-                        <div x-show="open" x-transition:enter="transition ease-out duration-100"
-                            x-transition:enter-start="transform opacity-0 scale-95"
-                            x-transition:enter-end="transform opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-75"
-                            x-transition:leave-start="transform opacity-100 scale-100"
-                            x-transition:leave-end="transform opacity-0 scale-95"
-                            class="absolute left-0 z-50 mt-1 origin-top-left bg-white rounded-md shadow-lg w-96 ring-1 ring-black ring-opacity-5 focus:outline-none"
-                            style="display: none;">
-                            <div class="p-4">
-                                <div class="grid grid-cols-3 gap-2">
-                                    <a href="{{ route('ministries.index') }}"
-                                        class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                        <span class="text-sm font-medium text-center text-gray-700">Explore
-                                            Ministries</span>
-                                    </a>
-                                    <a href="{{ route('ministries.index') }}"
-                                        class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                        <span class="text-sm font-medium text-center text-gray-700">Youth
-                                            Ministry</span>
-                                    </a>
-                                    <a href="{{ route('ministries.index') }}"
-                                        class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                        <span class="text-sm font-medium text-center text-gray-700">Women's
-                                            Ministry</span>
-                                    </a>
-                                    <a href="{{ route('ministries.index') }}"
-                                        class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                        <span class="text-sm font-medium text-center text-gray-700">Prayer
-                                            Ministry</span>
-                                    </a>
-                                    <a href="{{ route('ministries.index') }}"
-                                        class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                        <span class="text-sm font-medium text-center text-gray-700">Men's
-                                            Ministry</span>
-                                    </a>
-                                    <a href="{{ route('ministries.index') }}"
-                                        class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                        <span class="text-sm font-medium text-center text-gray-700">ministries
-                                        </span>
-                                    </a>
-                                </div>
+
+                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 -translate-y-2"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 -translate-y-2"
+                            class="absolute left-0 mt-2 w-96 origin-top-left rounded-xl bg-white shadow-lg ring-1 ring-black/5 z-50"
+                            style="display:none;">
+                            <div class="p-5 grid grid-cols-2 gap-3">
+                                @foreach ([
+                                'Explore Ministries' => 'ministries.index',
+                                'Youth Ministry' => 'ministries.index',
+                                'Women\'s Ministry' => 'ministries.index',
+                                'Prayer Ministry' => 'ministries.index',
+                                'Men\'s Ministry' => 'ministries.index',
+                                ] as $label => $route)
+                                <a href="{{ route($route) }}"
+                                    class="flex items-center p-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 transition-colors">
+                                    <span class="mr-3 text-blue-500">🙏</span> {{ $label }}
+                                </a>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -152,7 +124,7 @@
                     'Sermons' => 'sermons',
                     'Church-Bulletin' => 'frontend.info-hub',
                     'Gallery' => 'ministry.galleries',
-                    'Development' => 'frontend.develop',
+                    'Development' => 'projects.index',
                     'ContactUs' => 'contact'
                     ] as $label => $route)
                     <a href="{{ route($route) }}"
@@ -229,102 +201,53 @@
                 </a>
                 @endforeach
 
-                <!-- Mobile About Us Dropdown -->
-                <div x-data="{ ministriesOpen: false }">
-                    <button @click="ministriesOpen = !ministriesOpen"
-                        class="flex items-center justify-between w-full px-4 py-3.5 text-gray-700 hover:bg-blue-50 dark:text-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                <!-- Mobile About Us Accordion -->
+                <div x-data="{ open: false }">
+                    <button @click="open = !open"
+                        class="flex items-center justify-between w-full px-4 py-3.5 text-gray-700 hover:bg-blue-50 rounded-lg transition-colors">
                         <span>About Us</span>
-                        <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor" :class="{'rotate-180': ministriesOpen}"
-                            style="transition: transform 0.2s">
+                        <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': open }"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd"
                                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                 clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div x-show="ministriesOpen" class="px-4 py-2 mt-1 space-y-2 bg-white rounded-md">
-                        <div class="p-2">
-                            <h3 class="mb-3 text-sm font-semibold text-gray-900">About Our Ministry</h3>
-                            <div class="grid grid-cols-2 gap-2">
-                                <a href="{{ route('about') }}"
-                                    class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                    <span class="text-sm font-medium text-center text-gray-700">Who we are</span>
-                                </a>
-
-                                <a href="{{ route('churches') }}"
-                                    class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                    <span class="text-sm font-medium text-center text-gray-700">Regional Presence</span>
-                                </a>
-
-                                <a href="{{ route('church.leadership') }}"
-                                    class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                    <span class="text-sm font-medium text-center text-gray-700">Leadership</span>
-                                </a>
-                            </div>
-                        </div>
+                    <div x-show="open" x-collapse class="px-4 pb-3 space-y-2">
+                        <a href="{{ route('about') }}" class="block py-2 text-sm text-gray-600 hover:text-blue-600">Who
+                            we are</a>
+                        <a href="{{ route('churches') }}"
+                            class="block py-2 text-sm text-gray-600 hover:text-blue-600">Regional Presence</a>
+                        <a href="{{ route('church.leadership') }}"
+                            class="block py-2 text-sm text-gray-600 hover:text-blue-600">Leadership</a>
                     </div>
                 </div>
 
 
 
-                <!-- Mobile Ministries Dropdown -->
-                <div x-data="{ ministriesOpen: false }" class="relative">
-                    <!-- Dropdown Toggle Button -->
-                    <button @click="ministriesOpen = !ministriesOpen"
-                        class="flex items-center justify-between w-full px-4 py-3.5 text-gray-700 hover:bg-blue-50 dark:text-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                <!-- Mobile Ministries Accordion -->
+                <div x-data="{ open: false }">
+                    <button @click="open = !open"
+                        class="flex items-center justify-between w-full px-4 py-3.5 text-gray-700 hover:bg-blue-50 rounded-lg transition-colors">
                         <span>Ministries</span>
-                        <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor" :class="{'rotate-180': ministriesOpen}"
-                            style="transition: transform 0.2s">
+                        <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': open }"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd"
                                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                 clip-rule="evenodd" />
                         </svg>
                     </button>
-
-                    <!-- Dropdown Content -->
-                    <div x-show="ministriesOpen" x-transition:enter="transition ease-out duration-100"
-                        x-transition:enter-start="transform opacity-0 scale-95"
-                        x-transition:enter-end="transform opacity-100 scale-100"
-                        x-transition:leave="transition ease-in duration-75"
-                        x-transition:leave-start="transform opacity-100 scale-100"
-                        x-transition:leave-end="transform opacity-0 scale-95"
-                        class="px-4 py-2 mt-1 bg-white rounded-md">
-                        <div class="p-4">
-                            <h3 class="mb-3 text-sm font-semibold text-gray-900">Our Ministries</h3>
-                            <div class="grid grid-cols-3 gap-2">
-                                <a href="{{ route('ministries.index') }}"
-                                    class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                    <span class="text-sm font-medium text-center text-gray-700">Explore
-                                        Ministries</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </a>
-                                <a href="{{ route('ministries.index') }}"
-                                    class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                    <span class="text-sm font-medium text-center text-gray-700">Youth Ministry</span>
-                                </a>
-                                <a href="{{ route('ministries.index') }}"
-                                    class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                    <span class="text-sm font-medium text-center text-gray-700">Women's Ministry</span>
-                                </a>
-                                <a href="{{ route('ministries.index') }}"
-                                    class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                    <span class="text-sm font-medium text-center text-gray-700">Prayer Ministry</span>
-                                </a>
-                                <a href="{{ route('ministries.index') }}"
-                                    class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                    <span class="text-sm font-medium text-center text-gray-700">Men's Ministry</span>
-                                </a>
-                                <a href="{{ route('ministries.index') }}"
-                                    class="relative flex flex-col items-center p-3 transition-all rounded-lg hover:bg-blue-50 group">
-                                    <span class="text-sm font-medium text-center text-gray-700">ministries</span>
-                                </a>
-                            </div>
-                        </div>
+                    <div x-show="open" x-collapse class="px-4 pb-3 space-y-2">
+                        @foreach ([
+                        'Explore Ministries',
+                        'Youth Ministry',
+                        'Women\'s Ministry',
+                        'Prayer Ministry',
+                        'Men\'s Ministry',
+                        ] as $label)
+                        <a href="{{ route('ministries.index') }}"
+                            class="block py-2 text-sm text-gray-600 hover:text-blue-600">{{ $label }}</a>
+                        @endforeach
                     </div>
                 </div>
 
@@ -333,7 +256,7 @@
                 'Sermons' => 'sermons',
                 'Church-Bulletin' => 'frontend.info-hub',
                 'Gallery' => 'ministry.galleries',
-                'Development' => 'frontend.develop',
+                'Development' => 'projects.index',
                 'ContactUs' => 'contact'
                 ] as $label => $route)
                 <a href="{{ route($route) }}"

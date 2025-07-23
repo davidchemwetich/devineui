@@ -100,7 +100,7 @@
 
                         <!-- Main article content -->
                         <div class="prose prose-green max-w-none text-gray-700">
-                            {!! $article->body !!}
+                              {!! $article->body_html !!}
                         </div>
 
                         <!-- Share buttons -->

@@ -89,6 +89,9 @@
                         <button @click="activeTab = 'seo'" :class="{ 'border-indigo-500 text-indigo-600 dark:text-indigo-400': activeTab === 'seo', 'border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500': activeTab !== 'seo' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm focus:outline-none">
                             SEO
                         </button>
+                        <button @click="activeTab = 'sitemap'" :class="{ 'border-indigo-500 text-indigo-600 dark:text-indigo-400': activeTab === 'sitemap', 'border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500': activeTab !== 'sitemap' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm focus:outline-none">
+                            Sitemap Generator
+                        </button>
                     </nav>
                 </div>
 
@@ -167,7 +170,6 @@
                             @error('state.youtube_url') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                         </div>
                     </div>
-
                     <div x-show="activeTab === 'seo'" x-transition class="space-y-6">
                         <!-- Meta Description -->
                         <div>
@@ -181,6 +183,10 @@
                             <input type="text" id="meta_keywords" wire:model.lazy="state.meta_keywords" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200" placeholder="Comma-separated keywords: church, faith, community">
                             @error('state.meta_keywords') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                         </div>
+                    </div>
+                    <div x-show="activeTab === 'sitemap'" x-transition class="space-y-6">
+                        <!-- Sitemap Generator -->
+                        <livewire:shield.settings.sitemap-generator />
                     </div>
                 </form>
             </div>
