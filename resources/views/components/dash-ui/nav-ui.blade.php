@@ -129,12 +129,14 @@
                 View Projects
             </a>
 
-            <a href="{{ route(config('app.admin_prefix', 'shield') . '.project.index') }}"
+            <a href="{{ route(config('app.admin_prefix', 'shield') . '.churches.hero.index') }}"
                 x-bind:class="activeMenu === 'analytics.performance' ? 'text-pink-600 dark:text-pink-400 font-medium' : 'text-gray-500 dark:text-gray-400'"
                 @click="activeMenu = 'analytics.performance'; sidebarOpen = false"
                 class="block px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                Project Management
+                Hero Slides Management
             </a>
+
+
         </div>
     </div>
 
@@ -322,11 +324,11 @@
         </button>
 
         <div x-show="settingsOpen" x-collapse class="pl-3 ml-6 space-y-1 border-l border-gray-200 dark:border-gray-600">
-            <a href=""
+            <a href="{{ url(config('app.admin_prefix', 'shield') . '/mobile/settings') }}"
                 x-bind:class="activeMenu === 'staff.profiles' ? 'text-gray-700 dark:text-gray-300 font-medium' : 'text-gray-500 dark:text-gray-400'"
                 @click="activeMenu = 'staff.profiles'; sidebarOpen = false"
                 class="block px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                Staff Profiles
+                Mobile Settings
             </a>
             <a href="{{ route(config('app.admin_prefix', 'shield') . '.settings.about') }}"
                 x-bind:class="activeMenu === 'settings.index' ? 'text-gray-700 dark:text-gray-300 font-medium' : 'text-gray-500 dark:text-gray-400'"

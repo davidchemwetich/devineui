@@ -13,10 +13,13 @@ use App\Livewire\Shield\Church\TeamCategories;
 use App\Livewire\Shield\Church\TeamMemberForm;
 use App\Livewire\Shield\Church\TeamMemberOrdering;
 use App\Livewire\Shield\Church\TeamMembers;
+use App\Livewire\Shield\Hero\HeroSlideManager;
 use App\Livewire\Shield\Ministry\MinistryEventForm;
 use App\Livewire\Shield\Ministry\MinistryEventList;
 use App\Livewire\Shield\Ministry\MinistryForm;
 use App\Livewire\Shield\Ministry\MinistryIndex;
+use App\Livewire\Shield\Mobile;
+use App\Livewire\Shield\Mobile\Settings;
 use App\Livewire\Shield\Settings\AboutUsManager;
 use App\Livewire\Shield\Settings\Announcements;
 use App\Livewire\Shield\Settings\ContactMessages;
@@ -46,7 +49,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Contact Us Route
 Route::get('/contact', \App\Livewire\Frontend\Settings\ContactPage::class)->name('contact');
-// About Us page 
+// About Us page
 Route::get('/about', Aboutsite::class)->name('about');
 
 Route::get('/ministries', MinistryShowcase::class)->name('ministries.index');
@@ -162,6 +165,8 @@ Route::middleware([
         // Church Management Routes
         Route::prefix('churches')->name('churches.')->group(function () {
             Route::get('/shield/churches', ManageChurches::class)->name('shield.churches');
+            // Hero Slides Management
+            Route::get('/hero-slides', HeroSlideManager::class)->name('hero.index');
         });
 
         // Team Member Management Routes
@@ -203,6 +208,13 @@ Route::middleware([
 
             Route::get('{projectId}/edit', \App\Livewire\Shield\Project\ProjectForm::class)
                 ->name('edit');
+        });
+
+        // Mobile App Settings
+        Route::prefix('mobile')->name('mobile.')->group(function () {
+            Route::get('/settings', Settings::class)->name('settings');
+            Route::get('/api-tokens', \App\Livewire\Shield\Mobile\ApiTokenManager::class)
+                ->name('api-tokens');
         });
     });
 

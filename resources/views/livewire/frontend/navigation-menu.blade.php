@@ -14,7 +14,7 @@
                     <div class="flex items-center flex-shrink-0 space-x-3 group">
                         @if($siteSettings)
                         <img src="{{ $siteSettings->institution_logo_url }}" alt="ByNetOps"
-                            class="h-10 w-auto object-contain pointer-events-none select-none">
+                            class="object-contain w-auto h-10 pointer-events-none select-none">
                         @endif
                         <div class="flex flex-col">
                             <span class="text-md font-bold leading-tight text-[#008000]">
@@ -60,19 +60,19 @@
                             x-transition:leave="transition ease-in duration-150"
                             x-transition:leave-start="opacity-100 translate-y-0"
                             x-transition:leave-end="opacity-0 -translate-y-2"
-                            class="absolute left-0 mt-2 w-72 origin-top-left rounded-xl bg-white shadow-lg ring-1 ring-black/5 z-50"
+                            class="absolute left-0 z-50 mt-2 origin-top-left bg-white shadow-lg w-72 rounded-xl ring-1 ring-black/5"
                             style="display:none;">
-                            <div class="p-5 grid grid-cols-1 gap-3">
+                            <div class="grid grid-cols-1 gap-3 p-5">
                                 <a href="{{ route('about') }}"
-                                    class="flex items-center p-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 transition-colors">
+                                    class="flex items-center p-3 text-sm font-medium text-gray-700 transition-colors rounded-lg hover:bg-blue-50">
                                     <span class="mr-3 text-blue-500">👥</span> Who we are
                                 </a>
                                 <a href="{{ route('churches') }}"
-                                    class="flex items-center p-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 transition-colors">
+                                    class="flex items-center p-3 text-sm font-medium text-gray-700 transition-colors rounded-lg hover:bg-blue-50">
                                     <span class="mr-3 text-green-500">🌍</span> Regional Presence
                                 </a>
                                 <a href="{{ route('church.leadership') }}"
-                                    class="flex items-center p-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 transition-colors">
+                                    class="flex items-center p-3 text-sm font-medium text-gray-700 transition-colors rounded-lg hover:bg-blue-50">
                                     <span class="mr-3 text-purple-500">👑</span> Leadership
                                 </a>
                             </div>
@@ -101,9 +101,9 @@
                             x-transition:leave="transition ease-in duration-150"
                             x-transition:leave-start="opacity-100 translate-y-0"
                             x-transition:leave-end="opacity-0 -translate-y-2"
-                            class="absolute left-0 mt-2 w-96 origin-top-left rounded-xl bg-white shadow-lg ring-1 ring-black/5 z-50"
+                            class="absolute left-0 z-50 mt-2 origin-top-left bg-white shadow-lg w-96 rounded-xl ring-1 ring-black/5"
                             style="display:none;">
-                            <div class="p-5 grid grid-cols-2 gap-3">
+                            <div class="grid grid-cols-2 gap-3 p-5">
                                 @foreach ([
                                 'Explore Ministries' => 'ministries.index',
                                 'Youth Ministry' => 'ministries.index',
@@ -112,7 +112,7 @@
                                 'Men\'s Ministry' => 'ministries.index',
                                 ] as $label => $route)
                                 <a href="{{ route($route) }}"
-                                    class="flex items-center p-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 transition-colors">
+                                    class="flex items-center p-3 text-sm font-medium text-gray-700 transition-colors rounded-lg hover:bg-blue-50">
                                     <span class="mr-3 text-blue-500">🙏</span> {{ $label }}
                                 </a>
                                 @endforeach
@@ -124,7 +124,7 @@
                     'Sermons' => 'sermons',
                     'Church-Bulletin' => 'frontend.info-hub',
                     'Gallery' => 'ministry.galleries',
-                    'Development' => 'projects.index',
+                    'Projects' => 'projects.index',
                     'ContactUs' => 'contact'
                     ] as $label => $route)
                     <a href="{{ route($route) }}"
@@ -251,12 +251,11 @@
                     </div>
                 </div>
 
-
                 @foreach ([
                 'Sermons' => 'sermons',
                 'Church-Bulletin' => 'frontend.info-hub',
                 'Gallery' => 'ministry.galleries',
-                'Development' => 'projects.index',
+                'Projects' => 'projects.index',
                 'ContactUs' => 'contact'
                 ] as $label => $route)
                 <a href="{{ route($route) }}"
