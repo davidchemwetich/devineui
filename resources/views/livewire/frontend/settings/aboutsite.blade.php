@@ -200,14 +200,15 @@
     <!-- Main Content Section -->
     <section class="py-16 dark:bg-gray-800">
         {{-- <div class="container relative z-10 px-4 mx-auto text-center"
-        x-intersect="$el.classList.add('animate-fade-in-down')"> --}}
-        {{-- <h1 class="mb-6 text-4xl font-bold text-[#008000] md:text-5xl lg:text-6xl animated-gradient-text">
-            {{ $aboutUs->heading ?? 'Welcome to Our Church Family' }}
-        </h1>
-        <p class="text-xl font-medium text-[#008000] md:text-2xl opacity-90">
-            {{ $aboutUs->subheading ?? 'Walking in Faith, Growing in Grace' }}
-        </p> --}}
-    {{-- </div> --}}
+            x-intersect="$el.classList.add('animate-fade-in-down')"> --}}
+            {{-- <h1 class="mb-6 text-4xl font-bold text-[#008000] md:text-5xl lg:text-6xl animated-gradient-text">
+                {{ $aboutUs->heading ?? 'Welcome to Our Church Family' }}
+            </h1>
+            <p class="text-xl font-medium text-[#008000] md:text-2xl opacity-90">
+                {{ $aboutUs->subheading ?? 'Walking in Faith, Growing in Grace' }}
+            </p> --}}
+            {{--
+        </div> --}}
         <div class="container px-4 mx-auto">
             <div class="grid items-center gap-12 md:grid-cols-2">
                 <!-- Content -->
@@ -216,7 +217,7 @@
                         class="inline-block px-4 py-1 mb-4 text-sm font-medium rounded-full text-white bg-[#008000]">About
                         Our Church</span>
                     <h2 class="mb-6 text-3xl font-bold text-gray-800 md:text-4xl dark:text-white">Serving Our Community
-                        <span class="text-[#008000]">Since 1982</span>
+                        <span class="text-[#008000]">Since 2000</span>
                     </h2>
                     <div class="mb-8 text-black dark:text-[#15803d]">
                         {!! $aboutUs->content ?? '<p class="text-gray-600 dark:text-gray-300">Our church story begins

@@ -1,258 +1,354 @@
-<div class="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8" x-data="{
-    showVideoModal: false,
-    showAudioPlayer: false,
-    showPdfViewer: false,
-    audioSrc: '',
-    pdfSrc: ''
- }">
-    <!-- Video Modal -->
-    <div x-show="showVideoModal" x-cloak x-transition:enter="transition ease-out duration-300"
-        x-transition:leave="transition ease-in duration-200"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
-        @click.away="showVideoModal = false">
-        <div class="w-full max-w-4xl p-4">
-            <div class="relative aspect-video">
-                @if($featuredSermon && $featuredSermon->video_url)
-                <iframe class="absolute inset-0 w-full h-full" src="{{ $featuredSermon->video_url ? (preg_match('/youtu\.be\/([a-zA-Z0-9_-]+)(\?|$)/', $featuredSermon->video_url, $matches)
-                    ? 'https://www.youtube.com/embed/' . $matches[1] . (strpos($featuredSermon->video_url, '?list=') !== false ? '?' . substr(strstr($featuredSermon->video_url, '?list='), 1) : '')
-                    : (Str::contains($featuredSermon->video_url, 'youtube.com/watch?v=')
-                        ? str_replace('youtube.com/watch?v=', 'youtube.com/embed/', $featuredSermon->video_url)
-                        : $featuredSermon->video_url)) : '' }}&autoplay=0&rel=0" frameborder="0"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                </iframe>
-                @endif
-                <button @click="showVideoModal = false"
-                    class="absolute p-2 text-white bg-black bg-opacity-50 rounded-full top-4 right-4 hover:bg-opacity-70">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
+<div class="bg-gray-50 dark:bg-gray-900">
+    <div class="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8" x-data="sermonModal()"
+        @keydown.escape.window="closeModal()">
+
+        @if($featuredSermon)
+        <!-- Header Section -->
+        <div class="mb-12 text-center">
+            <h2 class="text-3xl font-extrabold tracking-tight text-[#008000] sm:text-4xl">
+                Featured Sermon
+            </h2>
+            <div class="w-20 h-1 mx-auto mt-3 rounded-full bg-[#008000]"></div>
+            <p class="max-w-2xl mx-auto mt-4 text-xl text-gray-600 dark:text-gray-400">
+                Experience God's word through our latest featured message.
+            </p>
         </div>
-    </div>
 
-    <!-- Audio Player Modal -->
-    <div x-show="showAudioPlayer" x-cloak x-transition:enter="transition ease-out duration-300"
-        x-transition:leave="transition ease-in duration-200"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
-        @click.away="showAudioPlayer = false">
-        <div class="w-full max-w-2xl p-6 bg-white rounded-lg shadow-xl">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-xl font-bold text-[#008000]">Listen to Sermon</h3>
-                <button @click="showAudioPlayer = false" class="text-gray-500 hover:text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <div class="p-4 rounded-lg bg-emerald-50">
-                <audio x-bind:src="audioSrc" controls class="w-full" preload="metadata">
-                    Your browser does not support the audio element.
-                </audio>
-            </div>
-            <div class="mt-4 text-right">
-                <a x-bind:href="audioSrc" download
-                    class="inline-flex items-center px-4 py-2 text-white rounded-lg bg-emerald- 700 hover:bg-[#008000]">
-                    Download MP3
-                </a>
-            </div>
-        </div>
-    </div>
+        <div class="grid items-start grid-cols-1 gap-12 lg:grid-cols-2">
+            <!-- Left Column: Video Thumbnail -->
+            <div class="relative order-1">
+                <div @click="openModal('video', '{{ $featuredSermon->video_embed_url }}')"
+                    class="relative overflow-hidden transition-all duration-300 rounded-lg shadow-lg cursor-pointer group aspect-video hover:shadow-2xl hover:-translate-y-1">
+                    <img src="{{ $featuredSermon->cover_image_url }}" alt="Cover image for {{ $featuredSermon->title }}"
+                        class="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+                        onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1280&h=720&fit=crop&crop=center';" />
 
-    <!-- PDF Viewer Modal -->
-    <div x-show="showPdfViewer" x-cloak x-transition:enter="transition ease-out duration-300"
-        x-transition:leave="transition ease-in duration-200"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
-        @click.away="showPdfViewer = false">
-        <div class="w-full max-w-2xl p-6 bg-white rounded-lg shadow-xl">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-xl font-bold text-[#008000]">View Sermon Notes</h3>
-                <button @click="showPdfViewer = false" class="text-gray-500 hover:text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <iframe x-bind:src="pdfSrc" class="w-full h-96" frameborder="0"></iframe>
-            <div class="mt-4 text-right">
-                <a x-bind:href="pdfSrc" target="_blank"
-                    class="inline-flex items-center px-4 py-2 text-white rounded-lg bg-[#008000] hover:bg-[#008000]">
-                    Open PDF in New Tab
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="mb-12 text-center">
-        <h2 class="text-3xl font-bold text-[#008000]">Featured Sermon</h2>
-        <div class="w-20 h-1 mx-auto mt-3 rounded-full bg-[#008000]"></div>
-        <p class="mt-6 text-lg text-black">Experience God's word through our featured message</p>
-    </div>
-
-    @if($featuredSermon)
-    <div class="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
-        <!-- Sermon Thumbnail -->
-        <div class="relative overflow-hidden shadow-lg cursor-pointer group aspect-video rounded-2xl"
-            @click="showVideoModal = true" wire:loading.class="opacity-75">
-            <img src="{{ $featuredSermon->getCoverImageUrlAttribute() }}" alt="{{ $featuredSermon->title }}"
-                class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105">
-            <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/60 to-emerald-900/30">
-                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <div class="flex items-center gap-2">
-                        <span class="px-3 py-1 text-sm font-medium rounded-full bg-[#008000]">Featured Message</span>
-                        <span class="text-sm opacity-90">{{ $featuredSermon->category }}</span>
+                    <!-- Gradient Overlay -->
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent group-hover:from-black/80">
                     </div>
-                    <h3 class="mt-4 text-2xl font-bold">{{ $featuredSermon->title }}</h3>
+
+                    <!-- Play Button -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                            class="flex items-center justify-center p-6 transition-all duration-300 transform bg-white/20 backdrop-blur-sm rounded-full group-hover:bg-[#008000] group-hover:scale-110">
+                            <svg class="w-16 h-16 text-white transition-transform duration-300 group-hover:scale-110"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path
+                                    d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Info -->
+                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                        <span
+                            class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full bg-[#008000]/90 backdrop-blur-sm">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034 1.07 3.292c.3.921-.755 1.688-1.54 1.118L10 12.347l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292-2.8-2.034c-.784-.57-.38-1.81.588-1.81h3.461l1.07-3.292z" />
+                            </svg>
+                            Featured Message
+                        </span>
+                        <h3 class="mt-3 text-2xl font-bold line-clamp-2">{{ $featuredSermon->title }}</h3>
+                    </div>
                 </div>
             </div>
-            <div
-                class="absolute transition-opacity transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 opacity-90 group-hover:opacity-100">
-                <div class="p-5 bg-[#008000] rounded-full shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                    </svg>
+
+            <!-- Right Column: Details & Actions -->
+            <div class="order-2 space-y-6">
+                <!-- Preacher Info -->
+                <div
+                    class="flex items-center p-6 transition-shadow bg-white shadow-md rounded-xl dark:bg-gray-800 hover:shadow-lg">
+                    <div class="relative">
+                        <img class="w-16 h-16 rounded-full ring-4 ring-offset-2 dark:ring-offset-gray-800 ring-[#008000]/20"
+                            src="{{ $featuredSermon->user->profile_photo_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($featuredSermon->user->name) . '&background=008000&color=ffffff&size=64' }}"
+                            alt="{{ $featuredSermon->user->name }}">
+                        <div
+                            class="absolute -bottom-1 -right-1 w-6 h-6 bg-[#008000] rounded-full flex items-center justify-center">
+                            <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                <path fill-rule="evenodd"
+                                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex-1 ml-4">
+                        <div class="text-lg font-bold text-gray-900 dark:text-white">{{ $featuredSermon->user->name }}
+                        </div>
+                        <div class="flex items-center mt-1 text-sm text-gray-500 dark:text-gray-400">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Preached on {{ $featuredSermon->formatted_date }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="p-6 transition-shadow bg-white shadow-md rounded-xl dark:bg-gray-800 hover:shadow-lg">
+                    <h4 class="flex items-center mb-3 font-semibold text-gray-900 dark:text-white">
+                        <svg class="w-5 h-5 mr-2 text-[#008000]" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        About This Message
+                    </h4>
+                    <p class="leading-relaxed text-gray-600 dark:text-gray-300">
+                        {{ Str::limit($featuredSermon->description, 300) }}
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-3">
+                    <!-- Primary Watch Button -->
+                    <button @click="openModal('video', '{{ $featuredSermon->video_embed_url }}')"
+                        class="flex items-center justify-center w-full px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-[#008000] to-green-600 rounded-xl hover:from-green-600 hover:to-[#008000] transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+                        <svg class="w-6 h-6 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path
+                                d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                        </svg>
+                        Watch Full Sermon
+                    </button>
+
+                    <!-- Secondary Actions -->
+                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        @if($featuredSermon->hasAudio())
+                        <button @click="openModal('audio', '{{ $featuredSermon->audio_url }}')"
+                            class="flex items-center justify-center px-4 py-3 text-sm font-semibold text-[#008000] bg-green-50 border-2 border-green-100 rounded-lg hover:bg-green-100 hover:border-[#008000] dark:bg-green-900/20 dark:border-green-800 dark:text-green-300 dark:hover:bg-green-900/40 transition-all duration-300">
+                            <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path
+                                    d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
+                            </svg>
+                            Listen Audio
+                        </button>
+                        @endif
+
+                        @if($featuredSermon->hasPdf())
+                        <button @click="openModal('pdf', '{{ $featuredSermon->pdf_url }}')"
+                            class="flex items-center justify-center px-4 py-3 text-sm font-semibold text-[#008000] bg-green-50 border-2 border-green-100 rounded-lg hover:bg-green-100 hover:border-[#008000] dark:bg-green-900/20 dark:border-green-800 dark:text-green-300 dark:hover:bg-green-900/40 transition-all duration-300">
+                            <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            View Notes
+                        </button>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
+        @else
+        <!-- No Featured Sermon State -->
+        <div class="py-16 text-center bg-white shadow-md rounded-xl dark:bg-gray-800">
+            <div
+                class="flex items-center justify-center w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full dark:bg-gray-700">
+                <svg class="w-12 h-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+            </div>
+            <h3 class="mb-2 text-xl font-semibold text-gray-900 dark:text-white">No Featured Sermon</h3>
+            <p class="max-w-md mx-auto text-gray-500 dark:text-gray-400">
+                We're preparing something special for you. Please check back soon for our latest featured message.
+            </p>
+        </div>
+        @endif
 
-        <!-- Sermon Details -->
-        <div class="space-y-6">
-            <div class="p-6 bg-white rounded-lg shadow-sm">
-                <h3 class="text-2xl font-bold text-[#008000]">{{ $featuredSermon->title }}</h3>
-                <div class="flex items-center mt-4 gap-x-3">
-                    <div class="flex items-center flex-1 gap-x-3">
-                        <img src="{{ $featuredSermon->user->profile_photo_url }}"
-                            alt="{{ $featuredSermon->user->name }}"
-                            class="object-cover w-12 h-12 rounded-full ring-2 ring-emerald-500">
-                        <div>
-                            <div class="font-medium text-[#008000]">{{ $featuredSermon->user->name }}</div>
-                            <div class="text-sm text-[#008000]">{{ $featuredSermon->getPreachedDateAttribute() }}
+        <!-- Enhanced Universal Modal -->
+        <div x-show="isOpen" x-cloak @click.self="closeModal()"
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+
+            <div class="relative w-full max-w-6xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden"
+                :class="modalClasses()" x-transition:enter="ease-out duration-300"
+                x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+                x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="ease-in duration-200"
+                x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                x-transition:leave-end="opacity-0 scale-95 translate-y-4">
+
+                <!-- Close Button -->
+                <button @click="closeModal()"
+                    class="absolute z-30 p-2 text-gray-400 transition-all duration-200 rounded-full top-4 right-4 bg-white/90 dark:bg-gray-800/90 hover:text-gray-600 hover:bg-white dark:hover:bg-gray-800 backdrop-blur-sm">
+                    <span class="sr-only">Close modal</span>
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <!-- Video Modal Content -->
+                <template x-if="activeModal === 'video'">
+                    <div class="relative w-full h-full">
+                        <div class="w-full h-full aspect-video">
+                            <iframe x-ref="videoFrame" :src="getVideoUrl()" class="w-full h-full rounded-2xl"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Audio Modal Content -->
+                <template x-if="activeModal === 'audio'">
+                    <div class="p-8">
+                        <div class="mb-6 text-center">
+                            <div
+                                class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-[#008000] to-green-600 rounded-full flex items-center justify-center">
+                                <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
+                                </svg>
+                            </div>
+                            <h3 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white">Listen to Sermon</h3>
+                            <p class="text-gray-600 dark:text-gray-400">{{ $featuredSermon->title ?? '' }}</p>
+                        </div>
+
+                        <div class="p-6 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                            <audio :src="mediaUrl" controls autoplay
+                                class="w-full h-12 mb-4 focus:outline-none focus:ring-2 focus:ring-[#008000]">
+                            </audio>
+
+                            <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                                <span>Audio Sermon</span>
+                                <a :href="mediaUrl" download
+                                    class="flex items-center text-[#008000] hover:text-green-600 font-medium transition-colors">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Download MP3
+                                </a>
                             </div>
                         </div>
                     </div>
-                    <div class="px-3 py-1 text-sm rounded-full bg-emerald-50 text-[#008000]">
-                        {{ $featuredSermon->category }}
+                </template>
+
+                <!-- PDF Modal Content -->
+                <template x-if="activeModal === 'pdf'">
+                    <div class="flex flex-col h-full max-h-[90vh]">
+                        <div
+                            class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center">
+                                <div
+                                    class="flex items-center justify-center w-10 h-10 mr-3 bg-red-100 rounded-lg dark:bg-red-900/30">
+                                    <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="currentColor"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Sermon Notes</h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $featuredSermon->title ?? ''
+                                        }}</p>
+                                </div>
+                            </div>
+                            <a :href="mediaUrl" target="_blank"
+                                class="flex items-center px-4 py-2 text-sm font-medium text-[#008000] bg-green-50 rounded-lg hover:bg-green-100 dark:bg-green-900/20 dark:hover:bg-green-900/40 transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Open in New Tab
+                            </a>
+                        </div>
+                        <div class="flex-1 min-h-0">
+                            <iframe :src="mediaUrl" class="w-full h-full" frameborder="0">
+                            </iframe>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Sermon Description -->
-            <div class="p-6 prose text-black bg-white rounded-lg shadow-sm">
-                <p>{{ $featuredSermon->description }}</p>
-            </div>
-
-
-
-            <!-- Action Buttons -->
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <button @click="showVideoModal = true" class="flex items-center justify-center px-4 py-3 font-medium text-white transition-all rounded-lg  bg-[#000FFF] hover:bg-[#2563eb]
-">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                    </svg>
-                    Watch Now
-                </button>
-                <button @click="showAudioPlayer = true; audioSrc = '{{ $featuredSermon->getAudioUrlAttribute() }}'"
-                    class="flex items-center justify-center px-4 py-3 font-medium text-white transition-all rounded-lg  bg-[#000FFF] hover:bg-[#2563eb]
-">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                    </svg>
-                    Listen Now
-                </button>
-                <button @click="showPdfViewer = true; pdfSrc = '{{ $featuredSermon->getPdfUrlAttribute() }}'"
-                    class="flex items-center justify-center px-4 py-3 font-medium transition-all bg-white border-2 rounded-lg text-[#008000] border-emerald-200 hover:border-emerald-300 gap-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    View Notes
-                </button>
-            </div>
-
-
-            <!-- Additional Links -->
-            <div class="flex flex-wrap items-center justify-between gap-4 pt-6">
-                <a href="{{ route('sermons') }}"
-                    class="flex items-center font-medium text-[#008000] hover:text-[#008000] gap-x-2">
-                    View Sermon Series
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-                <div class="flex items-center gap-x-4">
-                    <span class="text-sm text-[#008000]">Share:</span>
-                    <div class="flex gap-x-3">
-                        <!-- Facebook -->
-                        <a href="" target="_blank" class="text-[#008000] hover:text-[#008000]">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                            </svg>
-                        </a>
-                        <!-- Twitter/X -->
-                        <a href="" target="_blank" class="text-[#008000] hover:text-[#008000]">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-                            </svg>
-                        </a>
-                        <!-- WhatsApp -->
-                        <a href="" target="_blank" class="text-[#008000] hover:text-[#008000]">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Tags -->
-            <div class="pt-4">
-                <div class="flex flex-wrap gap-2">
-                    @if($featuredSermon->tags)
-                    @foreach ($featuredSermon->tags as $tag)
-                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-emerald-100 text-[#008000]">
-                        #{{ $tag }}
-                    </span>
-                    @endforeach
-                    @else
-                    <span class="px-3 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">
-                        No tags available
-                    </span>
-                    @endif
-                </div>
+                </template>
             </div>
         </div>
     </div>
-    @else
-    <div class="text-center">
-        <p class="text-lg text-red-600">No featured sermon available at the moment.</p>
-    </div>
-    @endif
 
-    <!-- Optional Flash Message -->
-    @if (session()->has('message'))
-    <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-        class="fixed px-6 py-3 text-[#008000] bg-green-100 rounded-lg shadow-md bottom-4 right-4">
-        {{ session('message') }}
-    </div>
-    @endif
+    <script>
+        function sermonModal() {
+            return {
+                isOpen: false,
+                activeModal: null,
+                mediaUrl: '',
+
+                openModal(type, url) {
+                    if (!url) {
+                        console.warn('No URL provided for modal');
+                        return;
+                    }
+
+                    this.activeModal = type;
+                    this.mediaUrl = url;
+                    this.isOpen = true;
+
+                    // Prevent body scroll when modal is open
+                    document.body.style.overflow = 'hidden';
+
+                    // Handle video-specific logic
+                    if (type === 'video') {
+                        this.$nextTick(() => {
+                            this.setupVideoAutoplay();
+                        });
+                    }
+                },
+
+                closeModal() {
+                    // Stop video if it's playing
+                    if (this.activeModal === 'video' && this.$refs.videoFrame) {
+                        this.$refs.videoFrame.src = 'about:blank';
+                    }
+
+                    this.isOpen = false;
+                    this.activeModal = null;
+                    this.mediaUrl = '';
+
+                    // Restore body scroll
+                    document.body.style.overflow = '';
+                },
+
+                setupVideoAutoplay() {
+                    if (this.$refs.videoFrame && this.mediaUrl) {
+                        const url = new URL(this.mediaUrl);
+                        url.searchParams.set('autoplay', '1');
+                        url.searchParams.set('rel', '0');
+                        url.searchParams.set('modestbranding', '1');
+                        this.$refs.videoFrame.src = url.toString();
+                    }
+                },
+
+                getVideoUrl() {
+                    if (!this.mediaUrl) return '';
+
+                    const url = new URL(this.mediaUrl);
+                    url.searchParams.set('autoplay', '1');
+                    url.searchParams.set('rel', '0');
+                    url.searchParams.set('modestbranding', '1');
+                    return url.toString();
+                },
+
+                modalClasses() {
+                    if (this.activeModal === 'video') {
+                        return 'aspect-video max-w-6xl';
+                    } else if (this.activeModal === 'pdf') {
+                        return 'max-w-6xl h-[90vh]';
+                    } else {
+                        return 'max-w-2xl';
+                    }
+                }
+            }
+        }
+    </script>
 </div>

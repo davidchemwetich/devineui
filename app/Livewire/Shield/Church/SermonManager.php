@@ -5,47 +5,32 @@ namespace App\Livewire\Shield\Church;
 use App\Models\Sermon;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class SermonManager extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithPagination, AuthorizesRequests;
 
     public $search = '';
-    public $sortField = 'created_at';
+    public $sortField = 'preached_on';
     public $sortDirection = 'desc';
-    public $category = '';
+    public $categoryFilter = '';
+    public $statusFilter = '';
+    public $featuredFilter = '';
+
+    public $sermonToDelete;
     public $confirmingSermonDeletion = false;
-    public $confirmingFeatureToggle = false;
-    public $sermonIdBeingDeleted;
-    public $sermonIdBeingFeatured;
 
     protected $queryString = [
         'search' => ['except' => ''],
-        'sortField' => ['except' => 'created_at'],
+        'sortField' => ['except' => 'preached_on'],
         'sortDirection' => ['except' => 'desc'],
-        'category' => ['except' => ''],
+        'categoryFilter' => ['except' => ''],
+        'statusFilter' => ['except' => ''],
+        'featuredFilter' => ['except' => ''],
+        'page' => ['except' => 1],
     ];
-
-    public function render()
-    {
-        $sermons = Sermon::query()
-            ->when($this->search, function ($query) {
-                return $query->where('title', 'like', '%' . $this->search . '%')
-                    ->orWhere('description', 'like', '%' . $this->search . '%');
-            })
-            ->when($this->category, function ($query) {
-                return $query->where('category', $this->category);
-            })
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(10);
-
-        return view('livewire.shield.church.sermon-manager', [
-            'sermons' => $sermons,
-            'categories' => ['Faith', 'Family', 'End Times', 'Other'],
-        ])->layout('shield.layouts.shield');
-    }
 
     public function sortBy($field)
     {
@@ -54,50 +39,83 @@ class SermonManager extends Component
         } else {
             $this->sortDirection = 'asc';
         }
-
         $this->sortField = $field;
     }
 
-    public function confirmSermonDeletion($sermonId)
+    public function confirmSermonDeletion(Sermon $sermon)
     {
+        $this->sermonToDelete = $sermon;
         $this->confirmingSermonDeletion = true;
-        $this->sermonIdBeingDeleted = $sermonId;
     }
 
     public function deleteSermon()
     {
-        $sermon = Sermon::findOrFail($this->sermonIdBeingDeleted);
-        
-        // Delete associated files
-        if ($sermon->audio_path) {
-            Storage::delete($sermon->audio_path);
-        }
-        if ($sermon->pdf_path) {
-            Storage::delete($sermon->pdf_path);
-        }
-        if ($sermon->cover_image) {
-            Storage:: delete($sermon->cover_image);
+        if (!$this->sermonToDelete) {
+            return;
         }
 
-        $sermon->delete();
+        // Using the bootable trait to delete associated files
+        $this->sermonToDelete->forceDelete();
+
         $this->confirmingSermonDeletion = false;
-        $this->sermonIdBeingDeleted = null;
-        session()->flash('message', 'Sermon deleted successfully.');
+        $this->sermonToDelete = null;
+
+        session()->flash('message', 'Sermon permanently deleted.');
     }
 
-    public function confirmFeatureToggle($sermonId)
+    public function toggleFeatured(Sermon $sermon)
     {
-        $this->confirmingFeatureToggle = true;
-        $this->sermonIdBeingFeatured = $sermonId;
+        $sermon->update(['is_featured' => !$sermon->is_featured]);
+        session()->flash('message', 'Sermon feature status updated.');
     }
 
-    public function toggleFeatured()
+    public function toggleStatus(Sermon $sermon)
     {
-        $sermon = Sermon::findOrFail($this->sermonIdBeingFeatured);
-        $sermon->is_featured = !$sermon->is_featured;
-        $sermon->save();
-        $this->confirmingFeatureToggle = false;
-        $this->sermonIdBeingFeatured = null;
-        session()->flash('message', 'Sermon feature status updated successfully.');
+        $newStatus = $sermon->status === 'published' ? 'draft' : 'published';
+        $sermon->update(['status' => $newStatus]);
+        session()->flash('message', 'Sermon status updated.');
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingCategoryFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingStatusFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFeaturedFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function render()
+    {
+        $sermons = Sermon::query()
+            ->with('user:id,name') // Eager load user to avoid N+1 problem
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('title', 'like', '%' . $this->search . '%')
+                        ->orWhere('description', 'like', '%' . $this->search . '%');
+                });
+            })
+            ->when($this->categoryFilter, fn($query) => $query->where('category', $this->categoryFilter))
+            ->when($this->statusFilter, fn($query) => $query->where('status', $this->statusFilter))
+            ->when($this->featuredFilter !== '', fn($query) => $query->where('is_featured', $this->featuredFilter))
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate(10);
+
+        return view('livewire.shield.church.sermon-manager', [
+            'sermons' => $sermons,
+            'categories' => Sermon::getCategories(),
+            'statuses' => Sermon::getStatuses(),
+        ])->layout('shield.layouts.shield');
     }
 }

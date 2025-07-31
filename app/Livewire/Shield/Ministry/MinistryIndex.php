@@ -6,19 +6,26 @@ use App\Models\Ministry;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class MinistryIndex extends Component
 {
     use WithPagination;
 
+    // Search and Filter
     public $search = '';
     public $leaderFilter = '';
+    public $perPage = 9; // Adjusted for a 3-column grid layout
+
+    // Sorting
     public $sortField = 'name';
     public $sortDirection = 'asc';
-    public $perPage = 10;
+
+    // Deletion Modal
     public $confirmingDeletion = false;
     public $ministryToDelete = null;
+
+    // Data
     public $leaders = [];
 
     protected $queryString = [
@@ -26,16 +33,16 @@ class MinistryIndex extends Component
         'leaderFilter' => ['except' => ''],
         'sortField' => ['except' => 'name'],
         'sortDirection' => ['except' => 'asc'],
-        'perPage' => ['except' => 10],
+        'perPage' => ['except' => 9],
     ];
-
-    protected $listeners = ['refreshMinistries' => '$refresh'];
 
     public function mount()
     {
-        $this->leaders = User::whereIn('id', Ministry::pluck('leader_id')->unique()->filter())->get();
+        // Eager load leaders who are associated with at least one ministry
+        $this->leaders = User::whereHas('ministries')->orderBy('name')->get();
     }
 
+    // Reset pagination when searching or filtering
     public function updatingSearch()
     {
         $this->resetPage();
@@ -46,6 +53,9 @@ class MinistryIndex extends Component
         $this->resetPage();
     }
 
+    /**
+     * Change the sorting field and direction.
+     */
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -56,66 +66,50 @@ class MinistryIndex extends Component
         }
     }
 
-    public function confirmDelete($id)
+    /**
+     * Show the confirmation modal for deletion.
+     */
+    public function confirmDelete(Ministry $ministry)
     {
+        $this->ministryToDelete = $ministry;
         $this->confirmingDeletion = true;
-        $this->ministryToDelete = $id;
     }
 
-    public function cancelDelete()
-    {
-        $this->confirmingDeletion = false;
-        $this->ministryToDelete = null;
-    }
-
+    /**
+     * Delete the selected ministry.
+     * The Ministry model's 'deleting' event will handle file cleanup.
+     */
     public function deleteMinistry()
     {
         if ($this->ministryToDelete) {
             try {
-                $ministry = Ministry::findOrFail($this->ministryToDelete);
-                
-                // Delete primary image
-                if ($ministry->primary_image) {
-                    Storage::delete('public/' . $ministry->primary_image);
-                }
-                
-                // Delete gallery images
-                if ($ministry->gallery_images) {
-                    foreach ($ministry->gallery_images as $image) {
-                        Storage::delete('public/' . $image);
-                    }
-                }
-                
-                // Delete ministry
-                $ministry->delete();
-                
+                $this->ministryToDelete->delete();
                 session()->flash('message', 'Ministry deleted successfully!');
             } catch (\Exception $e) {
                 session()->flash('error', 'Failed to delete ministry: ' . $e->getMessage());
+                Log::error('Ministry deletion failed: ' . $e->getMessage());
             }
-            
-            $this->confirmingDeletion = false;
-            $this->ministryToDelete = null;
         }
+        $this->reset('confirmingDeletion', 'ministryToDelete');
     }
 
+    /**
+     * Reset all filters to their default state.
+     */
     public function resetFilters()
     {
-        $this->search = '';
-        $this->leaderFilter = '';
-        $this->sortField = 'name';
-        $this->sortDirection = 'asc';
+        $this->reset('search', 'leaderFilter');
         $this->resetPage();
     }
 
     public function render()
     {
         $ministries = Ministry::query()
+            ->with('leader') // Eager load leader relationship
             ->when($this->search, function ($query) {
-                $query->where(function ($query) {
-                    $query->where('name', 'like', '%' . $this->search . '%')
-                          ->orWhere('description', 'like', '%' . $this->search . '%')
-                          ->orWhere('activities', 'like', '%' . $this->search . '%');
+                $query->where(function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%')
+                        ->orWhere('description', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->leaderFilter, function ($query) {
