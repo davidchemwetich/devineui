@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
 
 class SiteSettingsServiceProvider extends ServiceProvider
 {
@@ -22,14 +23,15 @@ class SiteSettingsServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // check if the site_settings table exists to avoid errors during migrations.
-        if (Schema::hasTable('site_settings')) {
-            // Fetch the first record of site settings.
-            // Using first() is efficient 
-            $siteSettings = SiteSetting::first();
-
-            // Share the siteSettings variable with all views.
-            View::share('siteSettings', $siteSettings);
+        try {
+            // Check if the site_settings table exists to avoid errors during migrations.
+            if (Schema::hasTable('site_settings')) {
+                $siteSettings = SiteSetting::first();
+                View::share('siteSettings', $siteSettings);
+            }
+        } catch (\Throwable $e) {
+            // Log a warning instead of breaking the app
+            Log::warning('SiteSettingsServiceProvider skipped: ' . $e->getMessage());
         }
     }
 }

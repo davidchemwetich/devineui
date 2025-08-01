@@ -17,90 +17,6 @@
             <p class="mt-3 text-lg font-semibold text-[#008000]">Loading inspiration...</p>
         </div>
     </div>
-    <!-- Filters and view toggle -->
-    {{-- <div class="flex flex-col gap-4 mb-8 md:flex-row md:items-center md:justify-between">
-        <button @click="mobileFiltersOpen = !mobileFiltersOpen"
-            class="flex items-center px-5 py-3 space-x-2 text-white transition bg-blue-600 shadow-lg md:hidden rounded-xl hover:bg-blue-700">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-            <span>Filters</span>
-        </button>
-        <div class="flex items-center space-x-3">
-            <button wire:click="setView('grid')" class="p-3 transition rounded-xl hover:bg-green-100"
-                :class="{ 'bg-green-100 text-[#008000]': '{{ $view }}' === 'grid' }">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
-            </button>
-            <button wire:click="setView('list')" class="p-3 transition rounded-xl hover:bg-green-100"
-                :class="{ 'bg-green-100 text-[#008000]': '{{ $view }}' === 'list' }">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
-        </div>
-    </div> --}}
-
-    <!-- Mobile filter dropdown -->
-    {{-- <div x-show="mobileFiltersOpen" x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
-        class="mb-6 md:hidden">
-        <div class="p-5 bg-white shadow-xl rounded-2xl">
-            <div class="mb-5">
-                <label class="block mb-2 text-sm font-semibold text-gray-800">Category</label>
-                <select wire:model="selectedCategory"
-                    class="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    <option value="">All Categories</option>
-                    @foreach($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="mb-5">
-                <label class="block mb-2 text-sm font-semibold text-gray-800">Search</label>
-                <div class="relative">
-                    <input type="text" wire:model.debounce.500ms="search"
-                        class="w-full py-3 pl-10 pr-4 border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        placeholder="Search articles...">
-                    <svg class="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </div>
-            </div>
-            <button wire:click="clearFilters"
-                class="w-full px-5 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">Clear
-                Filters</button>
-        </div>
-    </div> --}}
-
-    <!-- Desktop filters -->
-    {{-- <div class="items-center hidden gap-4 mb-8 md:flex">
-        <div class="relative flex-1 max-w-md">
-            <input type="text" wire:model.debounce.500ms="search"
-                class="w-full py-3 pl-10 pr-4 border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Search articles...">
-            <svg class="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-        </div>
-        <select wire:model="selectedCategory"
-            class="px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            <option value="">All Categories</option>
-            @foreach($categories as $category)
-            <option value="{{ $category->id }}">{{ $category->name }}</option>
-            @endforeach
-        </select>
-        <button wire:click="clearFilters"
-            class="px-5 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">Clear
-            Filters</button>
-    </div> --}}
 
     <!-- Main content -->
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
@@ -183,7 +99,7 @@
                 <div
                     class="transition duration-300 transform bg-white shadow-sm rounded-xl hover:shadow-lg hover:-translate-y-1">
                     <div class="relative overflow-hidden rounded-t-xl aspect-w-16 aspect-h-9">
-                        @if($article->featured_image)
+                        @if ($article->featured_image)
                         <img src="{{ asset('storage/' . $article->featured_image) }}" alt="{{ $article->title }}"
                             class="object-cover w-full h-full transition-transform duration-500 hover:scale-105"
                             loading="lazy">
@@ -196,13 +112,19 @@
                             </svg>
                         </div>
                         @endif
-                        <div
-                            class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/60 to-transparent">
+
+                        <!-- Overlay gradient -->
+                        <div class="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent">
                         </div>
-                        <span
-                            class="absolute px-2 py-1 text-xs font-medium text-white bg-blue-600 rounded-full bottom-3 left-3">{{
-                            $article->category->name }}</span>
+
+                        <!-- Category badge -->
+                        {{-- <span
+                            class="absolute px-1.5 py-0.5 text-[10px] font-medium text-white bg-blue-600 rounded bottom-2 left-2">
+                            {{ $article->category->name }}
+                        </span> --}}
+
                     </div>
+
                     <div class="p-5">
                         <div class="flex items-center mb-3 text-sm text-gray-600">
                             <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
