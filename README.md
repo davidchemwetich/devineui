@@ -1,15 +1,10 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/status-BETA-orange?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/license-CC%20BY--NC%204.0-red?style=for-the-badge" />
-</p>
+# DevineUI – Church CRM ✝️
 
-<h1 align="center">🙏 DevineUI - Church CRM</h1>
+[![BETA](https://img.shields.io/badge/status-BETA-orange?style=for-the-badge&logo=laravel)](https://github.com/davidchemwetich/devineui)
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-blue?style=for-the-badge&logo=creativecommons)](https://creativecommons.org/licenses/by-nc/4.0/)
 
-<p align="center">
-  A modern Church Management System built with the <b>TALL</b> Stack (Tailwind CSS, Alpine.js, Laravel, Livewire)  
-  <br>  
-  <i>🚀 Built with Laravel 12 & PHP 8.4 — Runs on Docker Sail</i>
-</p>
+> 🚧 **This project is still in active development (BETA)** – expect changes and new features coming soon.  
+> 📜 Licensed under **Creative Commons Attribution-NonCommercial 4.0** – not for commercial use.
 
 ---
 
@@ -64,6 +59,5 @@ You may **use, modify, and share** the code **for personal and educational purpo
 Pull requests are welcome! If you'd like to contribute to new features (like Reports or Payment Integration), fork the repo and submit a PR.
 
 ---
-
 <p align="center">✨ Made with love & code for the Church Community ✨</p>
-```
+
