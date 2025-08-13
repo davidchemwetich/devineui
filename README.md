@@ -1,138 +1,71 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/status-BETA-orange?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/license-CC%20BY--NC%204.0-red?style=for-the-badge" />
+</p>
 
-````md
-# ✝️ DevineUI – Church CRM (TALL Stack) [BETA] 🚧
+<h1 align="center">🙏 DevineUI - Church CRM</h1>
 
-[![Project Status: Beta](https://img.shields.io/badge/status-beta-orange?style=for-the-badge)](https://github.com/davidchemwetich/devineui)
-[![PHP Version](https://img.shields.io/badge/PHP-8.4-blue?style=for-the-badge&logo=php)](https://www.php.net/)
-[![Laravel Version](https://img.shields.io/badge/Laravel-12-red?style=for-the-badge&logo=laravel)](https://laravel.com/)
-
-> ⚠️ **Beta Notice:** This project is still under active development.  
-> Fully functional core modules are ready, but advanced features are still in progress.  
-> Not recommended for production use (yet).
-
----
-
-🚀 **DevineUI** is a **modern, responsive Church CRM** built with the **TALL Stack**  
-(**Tailwind CSS**, **Alpine.js**, **Laravel**, **Livewire**) for managing members, attendance, donations, and events — running with **Docker Sail** 🐳
+<p align="center">
+  A modern Church Management System built with the <b>TALL</b> Stack (Tailwind CSS, Alpine.js, Laravel, Livewire)  
+  <br>  
+  <i>🚀 Built with Laravel 12 & PHP 8.4 — Runs on Docker Sail</i>
+</p>
 
 ---
 
-## ✅ Completed Features
-
-- 🔐 **Authentication & Roles**
-- 👥 **Member Management (CRUD)**
-- 📅 **Events & Calendar**
-- ✅ **Attendance Tracking**
-- 💰 **Donation Module**
-
----
-
-## 🚧 In Development
-
-- 📊 **Reports & Analytics**
-- 💳 **Donation Payment Gateway Integrations**
-- 📱 **Mobile App Version** (Flutter planned)
+## ✨ Features (Completed ✅)
+- 🔐 **Authentication & Role Management** — Secure access for Admins, Leaders & Members  
+- 👥 **Member CRUD** — Add, edit, and manage church members easily  
+- 📅 **Events & Calendar** — Organize and track upcoming services & events  
+- 📝 **Attendance Tracking** — Keep accurate records of who attended  
+- 💰 **Donation Module** — Record tithes, offerings, and contributions  
 
 ---
 
-## 🛠️ Tech Stack
-
-- **PHP 8.4**
-- **Laravel 12**
-- **Livewire** – Real-time interactivity
-- **Alpine.js** – Lightweight JS framework
-- **Tailwind CSS** – Modern UI styling
-- **MySQL** – Database
-- **Docker Sail** – Local development environment
+## 🔧 In Development (🚧 Coming Soon)
+- 📊 **Reports & Analytics** — Insightful church growth metrics  
+- 💳 **Donation Payment Gateway Integrations** — MPesa, PayPal, Stripe, etc.  
+- 📱 **Mobile App** — Seamless church management on the go  
 
 ---
 
-## 🐳 Installation (Docker Sail)
-
-### 1️⃣ Clone the Repository
+## 🐳 Getting Started with Docker Sail
 ```bash
+# Clone the repo
 git clone https://github.com/davidchemwetich/devineui.git
 cd devineui
-````
 
-### 2️⃣ Install Dependencies
-
-```bash
+# Install dependencies
 composer install
-npm install
-```
+npm install && npm run dev
 
-### 3️⃣ Copy `.env` & Set App Key
-
-```bash
+# Set up environment
 cp .env.example .env
 php artisan key:generate
-```
 
-Update `.env` with your database & mail settings.
-
-### 4️⃣ Start Docker Sail
-
-```bash
-./vendor/bin/sail up -d
-```
-
-(Optional alias for convenience):
-
-```bash
-alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
-```
-
-### 5️⃣ Run Migrations & Seed Data
-
-```bash
-sail artisan migrate --seed
-```
-
-### 6️⃣ Build Frontend Assets
-
-```bash
-sail npm run dev
-```
-
-### 7️⃣ Access the App
-
-Go to 👉 **[http://localhost](http://localhost)**
-(Default credentials will be in the database seed.)
-
----
-
-## 📌 Roadmap
-
-* [x] Authentication & Roles
-* [x] Member CRUD
-* [x] Events & Calendar
-* [x] Attendance Tracking
-* [x] Donation Module
-* [ ] Reports & Analytics
-* [ ] Payment Gateway Integrations
-* [ ] Mobile App
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome!
-Since we’re still in **beta**, contributions can shape the future of DevineUI.
+# Start with Docker Sail
+./vendor/bin/sail up
+````
 
 ---
 
 ## 📜 License
 
-This project is **MIT Licensed** – free to use, study, and modify.
+This project is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)** License.
+You may **use, modify, and share** the code **for personal and educational purposes only**.
+🚫 **Commercial use is NOT allowed without explicit permission**.
+
+🔗 [Read the full license here](https://creativecommons.org/licenses/by-nc/4.0/)
 
 ---
 
-## 🙏 Acknowledgements
+## ❤️ Contributing
 
-* Built with ❤️ by [David Chemwetich](https://github.com/davidchemwetich)
-* Powered by the **TALL Stack** 🖤
+Pull requests are welcome! If you'd like to contribute to new features (like Reports or Payment Integration), fork the repo and submit a PR.
 
-```
 ---
+
+<p align="center">✨ Made with love & code for the Church Community ✨</p>
 ```
+
+---
