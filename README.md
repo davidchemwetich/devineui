@@ -67,4 +67,3 @@ Pull requests are welcome! If you'd like to contribute to new features (like Rep
 
 <p align="center">✨ Made with love & code for the Church Community ✨</p>
 ```
----
